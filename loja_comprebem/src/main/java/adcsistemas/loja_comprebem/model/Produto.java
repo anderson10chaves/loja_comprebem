@@ -5,10 +5,14 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -23,25 +27,36 @@ public class Produto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_produto")
 	private Long id;
 	
+	@Column(nullable = false)
 	private String tipoUnidade;
 	
+	@Column(nullable = false)
 	private String nome;
 	
-	@Column(columnDefinition = "text", length = 2000)
+	@Column(columnDefinition = "text", length = 2000, nullable = false)
 	private String descricao;
 	
-	/*nota item produto associar*/
+	@OneToOne
+	@JoinColumn(name = "nota_item_produto_id", nullable = false,
+	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_item_produto_fk"))
+	private NotaItemProduto notaItemProduto;
 	
+	@Column(nullable = false)
 	private Double peso;
 	
+	@Column(nullable = false)
 	private Double largura;
 	
+	@Column(nullable = false)
 	private Double altura;
 	
+	@Column(nullable = false)
 	private Double profundidade;
 	
+	@Column(nullable = false)
 	private BigDecimal valorVenda = BigDecimal.ZERO;
 	
+	@Column(nullable = false)
 	private Integer qtdEstoque = 0;
 	
 	private Integer qtdAlertaEstoque = 0;
