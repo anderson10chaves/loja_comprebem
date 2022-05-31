@@ -2,23 +2,36 @@ package adcsistemas.loja_comprebem.security;
 
 import javax.servlet.http.HttpSessionListener;
 
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import adcsistemas.loja_comprebem.service.ImplementacaoUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class WebConfigSecurity implements HttpSessionListener{
+public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements HttpSessionListener{
 	
-	@Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers(HttpMethod.GET, "/salvarAcesso")
-        		.antMatchers(HttpMethod.POST, "/salvarAcesso")
-        		.antMatchers(HttpMethod.POST, "/deleteAcesso");
-    }
+	@Autowired
+	private ImplementacaoUserDetailsService implementacaoUserDetailsService;
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(implementacaoUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+	}
+	
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers(HttpMethod.GET, "/salvarAcesso", "/deleteAcesso")
+		.antMatchers(HttpMethod.POST, "/salvarAcesso", "/deleteAcesso");
+	}
+
 
 }
