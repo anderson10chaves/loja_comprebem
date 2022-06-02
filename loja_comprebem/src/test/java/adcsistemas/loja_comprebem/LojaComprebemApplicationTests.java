@@ -196,7 +196,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(true, acesso.getId() == null);
 		
-		acesso = acessoController.salvarAcesso(acesso).getBody();
+		//acesso = acessoController.salvarAcesso(acesso).getBody();
 		
 		assertEquals(true, acesso.getId() > 0);
 		
@@ -222,7 +222,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		acesso.setDescricao("ROLE_USER");
 		
-		acesso = acessoController.salvarAcesso(acesso).getBody();
+		//acesso = acessoController.salvarAcesso(acesso).getBody();
 		
 		List<Acesso> acessos = acessoRepository.buscarAcessoDesc("ROLE_USER".trim().toUpperCase());
 		

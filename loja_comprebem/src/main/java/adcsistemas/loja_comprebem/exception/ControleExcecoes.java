@@ -21,6 +21,16 @@ import adcsistemas.loja_comprebem.model.dto.ObjetoErroDTO;
 @RestControllerAdvice
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler({ExceptionLojaComprebem.class})
+	public ResponseEntity<Object> handleExceptionCustom (ExceptionLojaComprebem ex) {
+		ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+		
+		objetoErroDTO.setError(ex.getMessage());
+		objetoErroDTO.setCode(HttpStatus.OK.toString());
+		
+		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
+	}
 
 	@ExceptionHandler({ Exception.class, RuntimeException.class, Throwable.class })
 	@Override
