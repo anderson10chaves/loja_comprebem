@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -22,52 +23,55 @@ import javax.persistence.Table;
 public class Produto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_produto")
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private String tipoUnidade;
-	
+
 	@Column(nullable = false)
 	private String nome;
-	
+
 	@Column(columnDefinition = "text", length = 2000, nullable = false)
 	private String descricao;
-	
+
 	@OneToOne
-	@JoinColumn(name = "nota_item_produto_id", nullable = false,
-	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_item_produto_fk"))
+	@JoinColumn(name = "nota_item_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_item_produto_fk"))
 	private NotaItemProduto notaItemProduto;
-	
+
 	@Column(nullable = false)
 	private Double peso;
-	
+
 	@Column(nullable = false)
 	private Double largura;
-	
+
 	@Column(nullable = false)
 	private Double altura;
-	
+
 	@Column(nullable = false)
 	private Double profundidade;
-	
+
 	@Column(nullable = false)
 	private BigDecimal valorVenda = BigDecimal.ZERO;
-	
+
 	@Column(nullable = false)
 	private Integer qtdEstoque = 0;
-	
+
 	private Integer qtdAlertaEstoque = 0;
-	
+
 	private String linkYoutube;
-	
+
 	private Boolean alertaQtdEstoque = Boolean.FALSE;
-	
+
 	private Integer qtdClick = 0;
-	
+
 	private Boolean ativo = Boolean.TRUE;
+
+	@ManyToOne(targetEntity = Pessoa.class)
+	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
+	private Pessoa empresa;
 
 	public Long getId() {
 		return id;
@@ -187,6 +191,22 @@ public class Produto implements Serializable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public NotaItemProduto getNotaItemProduto() {
+		return notaItemProduto;
+	}
+
+	public void setNotaItemProduto(NotaItemProduto notaItemProduto) {
+		this.notaItemProduto = notaItemProduto;
+	}
+
+	public Pessoa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Pessoa empresa) {
+		this.empresa = empresa;
 	}
 
 	@Override

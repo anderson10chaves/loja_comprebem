@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -21,30 +22,33 @@ import javax.persistence.Table;
 public class NotaFiscalVenda implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_nota_fiscal_venda")
 	private Long id;
-	
+
 	@Column(nullable = false)
 	private String numero;
-	
+
 	@Column(nullable = false)
 	private String serie;
-	
+
 	@Column(nullable = false)
 	private String tipo;
-	
+
 	@Column(columnDefinition = "text", nullable = false)
 	private String xml;
-	
+
 	@Column(columnDefinition = "text", nullable = false)
 	private String pdf;
-	
+
 	@OneToOne
-	@JoinColumn(name = "venda_compra_loja_virt_id", nullable = false,
-	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_virt_fk"))
+	@JoinColumn(name = "venda_compra_loja_virt_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_virt_fk"))
 	private VendaCompraLojaVirtual vendaCompraLojaVirtual;
+
+	@ManyToOne(targetEntity = Pessoa.class)
+	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
+	private Pessoa empresa;
 
 	public Long getId() {
 		return id;
@@ -102,6 +106,14 @@ public class NotaFiscalVenda implements Serializable {
 		this.vendaCompraLojaVirtual = vendaCompraLojaVirtual;
 	}
 
+	public Pessoa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Pessoa empresa) {
+		this.empresa = empresa;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -118,7 +130,5 @@ public class NotaFiscalVenda implements Serializable {
 		NotaFiscalVenda other = (NotaFiscalVenda) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
 
 }

@@ -1,5 +1,6 @@
 package adcsistemas.loja_comprebem;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import adcsistemas.loja_comprebem.controller.AcessoController;
+import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.Acesso;
 import adcsistemas.loja_comprebem.repository.AcessoRepository;
 import junit.framework.TestCase;
@@ -45,7 +47,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		Acesso acesso = new Acesso();
 		
-		acesso.setDescricao("ROLE_COMPRADOR");
+		acesso.setDescricao("ROLE_COMPRADOR" + Calendar.getInstance().getTimeInMillis());
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
@@ -59,11 +61,13 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		/*Converter o retorno da api para obejto de acesso*/
 		
-		Acesso objetoRetorno = objectMapper.
-				readValue(retornoApi.andReturn().getResponse().getContentAsString(),
-				Acesso.class);
+		/*
+		 * Acesso objetoRetorno = objectMapper.
+		 * readValue(retornoApi.andReturn().getResponse().getContentAsString(),
+		 * Acesso.class);
+		 */
 		
-		assertEquals(acesso.getDescricao(), objetoRetorno.getDescricao());
+		//assertEquals(acesso.getDescricao(), objetoRetorno.getDescricao());
 		
 	}
 	
@@ -162,7 +166,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		acesso.setDescricao("ROLE_CONSULTA_ACESSO_DESC");
 		
-		//acesso = acessoRepository.save(acesso);
+		acesso = acessoRepository.save(acesso);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
@@ -179,20 +183,22 @@ class LojaComprebemApplicationTests extends TestCase {
 					readValue(retornoApi.andReturn().getResponse().getContentAsString(),
 							new TypeReference<List<Acesso>>() {});
 		
-		assertEquals(4, retornoApiList.size());
+		assertEquals(1, retornoApiList.size());
 		
 		assertEquals(acesso.getDescricao(), retornoApiList.get(0).getDescricao());
 		
-		//acessoRepository.deleteById(acesso.getId());
+		acessoRepository.deleteById(acesso.getId());
 		
 	}
 	
 	@Test
-	public void testCadastroAcesso() {
+	public void testCadastroAcesso() throws ExceptionLojaComprebem {
+		
+		String descacesso = "ROLE_ADMIN" + Calendar.getInstance().getTimeInMillis();
 		
 		Acesso acesso = new Acesso();
 		
-		acesso.setDescricao("ROLE_ADMIN");
+		acesso.setDescricao(descacesso);
 		
 		assertEquals(true, acesso.getId() == null);
 		
@@ -200,7 +206,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(true, acesso.getId() > 0);
 		
-		assertEquals("ROLE_ADMIN", acesso.getDescricao());
+		assertEquals(descacesso, acesso.getDescricao());
 		
 		Acesso acessoSalvo = acessoRepository.findById(acesso.getId()).get();
 		
@@ -222,7 +228,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		acesso.setDescricao("ROLE_USER");
 		
-		//acesso = acessoController.salvarAcesso(acesso).getBody();
+		acesso = acessoController.salvarAcesso(acesso).getBody();
 		
 		List<Acesso> acessos = acessoRepository.buscarAcessoDesc("ROLE_USER".trim().toUpperCase());
 		
