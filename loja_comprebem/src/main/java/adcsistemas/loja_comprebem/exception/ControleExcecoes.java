@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,14 +22,14 @@ import adcsistemas.loja_comprebem.model.dto.ObjetoErroDTO;
 @RestControllerAdvice
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
-	
-	@ExceptionHandler({ExceptionLojaComprebem.class})
-	public ResponseEntity<Object> handleExceptionCustom (ExceptionLojaComprebem ex) {
+
+	@ExceptionHandler({ ExceptionLojaComprebem.class })
+	public ResponseEntity<Object> handleExceptionCustom(ExceptionLojaComprebem ex) {
 		ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
-		
+
 		objetoErroDTO.setError(ex.getMessage());
 		objetoErroDTO.setCode(HttpStatus.OK.toString());
-		
+
 		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
 	}
 
@@ -47,13 +48,18 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 			for (ObjectError objectError : list) {
 				msg += objectError.getDefaultMessage() + "\n";
 			}
+		}
+		if (ex instanceof HttpMessageNotReadableException) {
+
+			msg = "Não contém dados para ser salvo";
+
 		} else {
 			msg = ex.getMessage();
 		}
 
 		objetoErroDTO.setError(msg);
 		objetoErroDTO.setCode(status.value() + " ==> " + status.getReasonPhrase());
-		
+
 		ex.printStackTrace();
 
 		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -81,11 +87,10 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 		} else {
 			msg = ex.getMessage();
 		}
-		
 
 		objetoErroDTO.setError(msg);
 		objetoErroDTO.setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
-		
+
 		ex.printStackTrace();
 
 		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
