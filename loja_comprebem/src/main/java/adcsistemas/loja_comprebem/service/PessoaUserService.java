@@ -17,52 +17,67 @@ public class PessoaUserService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
+
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
+	@Autowired
+	private SendEmailService sendEmailService;
+
 	public PessoaJuridica salvarPessoJuridica(PessoaJuridica pessoaJuridica) {
-		
-		//pessoaJuridica = pessoaRepository.save(pessoaJuridica);
-		
-		for (int i = 0; i< pessoaJuridica.getEnderecos().size(); i++) {
+
+		// pessoaJuridica = pessoaRepository.save(pessoaJuridica);
+
+		for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
 			pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
 			pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
 		}
-		
+
 		pessoaJuridica = pessoaRepository.save(pessoaJuridica);
-		
+
 		Usuario usuarioPj = usuarioRepository.findUserByPessoa(pessoaJuridica.getId(), pessoaJuridica.getEmail());
-		
+
 		if (usuarioPj == null) {
-			
+
 			String constraint = usuarioRepository.consultaConstraintAcesso();
 			if (constraint != null) {
 				jdbcTemplate.execute("begin; alter table usuarios_acesso drop constraint " + constraint + "; commit;");
 			}
-			
+
 			usuarioPj = new Usuario();
 			usuarioPj.setDataAtualSenha(Calendar.getInstance().getTime());
 			usuarioPj.setEmpresa(pessoaJuridica);
 			usuarioPj.setPessoa(pessoaJuridica);
 			usuarioPj.setLogin(pessoaJuridica.getEmail());
-			
+
 			String senha = "" + Calendar.getInstance().getTimeInMillis();
 			String senhaCript = new BCryptPasswordEncoder().encode(senha);
-			
+
 			usuarioPj.setSenha(senhaCript);
-			
+
 			usuarioPj = usuarioRepository.save(usuarioPj);
-			
+
 			usuarioRepository.insereAcessoUserPj(usuarioPj.getId());
+
+			StringBuilder mensagemHtml = new StringBuilder();
 			
-			
+			mensagemHtml.append("<b>Segue abaixo os dados de acesso para Loja-CompreBem</b>");
+			mensagemHtml.append("<b>Login: <b/>" + pessoaJuridica.getEmail() + "</b></br>");
+			mensagemHtml.append("<b>Senha: <b/>" + senha + "</br></br>");
+			mensagemHtml.append("Atenciosamente Loja-CompreBem");
+
+			try {
+				sendEmailService.enviarEmailHtml("Acesso Liberado para Loja-CompreBem", mensagemHtml.toString(),
+						pessoaJuridica.getEmail());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 		return pessoaJuridica;
-		
+
 	}
 }
