@@ -61,10 +61,11 @@ public class PessoaUserService {
 			usuarioPj = usuarioRepository.save(usuarioPj);
 
 			usuarioRepository.insereAcessoUserPj(usuarioPj.getId());
+			usuarioRepository.insereAcessoUserPj(usuarioPj.getId(), "ROLE_ADMIN");
 
 			StringBuilder mensagemHtml = new StringBuilder();
 			
-			mensagemHtml.append("<b>Segue abaixo os dados de acesso para Loja-CompreBem</b>");
+			mensagemHtml.append("<b>Segue abaixo os dados de acesso para Loja-CompreBem</b></br>");
 			mensagemHtml.append("<b>Login: <b/>" + pessoaJuridica.getEmail() + "</b></br>");
 			mensagemHtml.append("<b>Senha: <b/>" + senha + "</br></br>");
 			mensagemHtml.append("Atenciosamente Loja-CompreBem");
