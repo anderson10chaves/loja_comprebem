@@ -7,10 +7,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.model.PessoaJuridica;
 import adcsistemas.loja_comprebem.model.Usuario;
+import adcsistemas.loja_comprebem.repository.PessoaFisicaRepository;
 import adcsistemas.loja_comprebem.repository.PessoaRepository;
 import adcsistemas.loja_comprebem.repository.UsuarioRepository;
+
 
 @Service
 public class PessoaUserService {
@@ -20,6 +23,9 @@ public class PessoaUserService {
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private PessoaFisicaRepository pessoaFisicaRepository;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -27,7 +33,7 @@ public class PessoaUserService {
 	@Autowired
 	private SendEmailService sendEmailService;
 
-	public PessoaJuridica salvarPessoJuridica(PessoaJuridica pessoaJuridica) {
+	public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) {
 
 		// pessoaJuridica = pessoaRepository.save(pessoaJuridica);
 
@@ -60,7 +66,7 @@ public class PessoaUserService {
 
 			usuarioPj = usuarioRepository.save(usuarioPj);
 
-			usuarioRepository.insereAcessoUserPj(usuarioPj.getId());
+			usuarioRepository.insereAcessoUser(usuarioPj.getId());
 			usuarioRepository.insereAcessoUserPj(usuarioPj.getId(), "ROLE_ADMIN");
 
 			StringBuilder mensagemHtml = new StringBuilder();
@@ -81,4 +87,59 @@ public class PessoaUserService {
 		return pessoaJuridica;
 
 	}
+
+	public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) {
+		
+		// pessoaJuridica = pessoaRepository.save(pessoaJuridica);
+
+				for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
+					pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
+					//pessoaFisica.getEnderecos().get(i).setEmpresa(pessoaFisica);
+				}
+
+				pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
+
+				Usuario usuarioPf = usuarioRepository.findUserByPessoa(pessoaFisica.getId(), pessoaFisica.getEmail());
+
+				if (usuarioPf == null) {
+
+					String constraint = usuarioRepository.consultaConstraintAcesso();
+					if (constraint != null) {
+						jdbcTemplate.execute("begin; alter table usuarios_acesso drop constraint " + constraint + "; commit;");
+					}
+
+					usuarioPf = new Usuario();
+					usuarioPf.setDataAtualSenha(Calendar.getInstance().getTime());
+					usuarioPf.setEmpresa(pessoaFisica.getEmpresa());
+					usuarioPf.setPessoa(pessoaFisica);
+					usuarioPf.setLogin(pessoaFisica.getEmail());
+
+					String senha = "" + Calendar.getInstance().getTimeInMillis();
+					String senhaCript = new BCryptPasswordEncoder().encode(senha);
+
+					usuarioPf.setSenha(senhaCript);
+
+					usuarioPf = usuarioRepository.save(usuarioPf);
+
+					usuarioRepository.insereAcessoUser(usuarioPf.getId());
+					
+
+					StringBuilder mensagemHtml = new StringBuilder();
+					
+					mensagemHtml.append("<b>Segue abaixo os dados de acesso para Loja-CompreBem</b></br>");
+					mensagemHtml.append("<b>Login: <b/>" + pessoaFisica.getEmail() + "</b></br>");
+					mensagemHtml.append("<b>Senha: <b/>" + senha + "</br></br>");
+					mensagemHtml.append("Atenciosamente Loja-CompreBem");
+
+					try {
+						sendEmailService.enviarEmailHtml("Acesso Liberado para Loja-CompreBem", mensagemHtml.toString(),
+								pessoaFisica.getEmail());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				return pessoaFisica;
+	}
+
 }
