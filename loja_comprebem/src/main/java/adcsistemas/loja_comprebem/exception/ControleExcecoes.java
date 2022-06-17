@@ -49,7 +49,8 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 				msg += objectError.getDefaultMessage() + "\n";
 			}
 		}
-		if (ex instanceof HttpMessageNotReadableException) {
+		
+		else if (ex instanceof HttpMessageNotReadableException) {
 
 			msg = "Não contém dados para ser salvo";
 

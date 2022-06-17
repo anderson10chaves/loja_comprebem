@@ -1,5 +1,7 @@
 package adcsistemas.loja_comprebem.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,7 @@ public class PessoaController {
 
 	@ResponseBody
 	@PostMapping(value = "/salvarPj")
-	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptionLojaComprebem {
+	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionLojaComprebem {
 
 		if (pessoaJuridica == null) {
 			throw new ExceptionLojaComprebem("Pessoa Juridica não pode ser nulo!");
@@ -56,7 +58,7 @@ public class PessoaController {
 	
 	@ResponseBody
 	@PostMapping(value = "/salvarPf")
-	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody PessoaFisica pessoaFisica) throws ExceptionLojaComprebem {
+	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody @Valid PessoaFisica pessoaFisica) throws ExceptionLojaComprebem {
 
 		if (pessoaFisica == null) {
 			throw new ExceptionLojaComprebem("Pessoa Fisica não pode ser nulo!");

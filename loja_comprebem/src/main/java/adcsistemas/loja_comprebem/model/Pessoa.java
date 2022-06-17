@@ -20,6 +20,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -32,12 +36,18 @@ public abstract class Pessoa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
 	private Long id;
 
+	@Size(min = 4, message = "Nome deve conter 4 caracteres no mínimo")
+	@NotBlank(message = "Nome é Obrigatório")
+	@NotNull(message = "Nome é Obrigatório")
 	@Column(nullable = false)
 	private String nome;
 
+	@Email(message = "Email é Obrigatório")
 	@Column(nullable = false)
 	private String email;
 
+	@NotBlank(message = "Telefone é Obrigatório")
+	@NotNull(message = "Telefone é Obrigatório")
 	@Column(nullable = false)
 	private String telefone;
 
