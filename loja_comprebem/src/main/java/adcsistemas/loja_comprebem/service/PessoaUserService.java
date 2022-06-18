@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.model.PessoaJuridica;
 import adcsistemas.loja_comprebem.model.Usuario;
+import adcsistemas.loja_comprebem.model.dto.CepDTO;
 import adcsistemas.loja_comprebem.repository.PessoaFisicaRepository;
 import adcsistemas.loja_comprebem.repository.PessoaRepository;
 import adcsistemas.loja_comprebem.repository.UsuarioRepository;
@@ -140,6 +142,10 @@ public class PessoaUserService {
 				}
 
 				return pessoaFisica;
+	}
+	
+	public CepDTO consultaCep(String cep) {
+		return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDTO.class).getBody();
 	}
 
 }

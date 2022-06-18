@@ -33,7 +33,7 @@ public class Endereco implements Serializable {
 	private Long id;
 
 	@Column(nullable = false)
-	private String ruaLogradouro;
+	private String logradouro;
 
 	@Column(nullable = false)
 	private String cep;
@@ -74,12 +74,12 @@ public class Endereco implements Serializable {
 		this.id = id;
 	}
 
-	public String getRuaLogradouro() {
-		return ruaLogradouro;
+	public String getLogradouro() {
+		return logradouro;
 	}
 
-	public void setRuaLogradouro(String ruaLogradouro) {
-		this.ruaLogradouro = ruaLogradouro;
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
 	}
 
 	public String getCep() {
