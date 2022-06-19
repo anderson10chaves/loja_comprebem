@@ -1,10 +1,13 @@
 package adcsistemas.loja_comprebem.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +41,159 @@ public class PessoaController {
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+
+	@ResponseBody
+	@GetMapping(value = "/pesquisaPorNomePJ/{nome}")
+	public ResponseEntity<List<PessoaJuridica>> pesquisaPorNomePJ(@PathVariable("nome") String nome) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.pesquisaPorNomePJ(nome.trim().toUpperCase());
+		
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultasNomeFastasia/{nomeFantasia}")
+	public ResponseEntity<PessoaJuridica> existeNomeFantasia(@PathVariable("nomeFantasia") String nomeFantasia) {
+
+		PessoaJuridica pessoaJuridica = pessoaRepository.existeNomeFantasia(nomeFantasia.trim().toUpperCase());
+
+		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaNomeFastasia/{nomeFastasia}")
+	public ResponseEntity<List<PessoaJuridica>> existeNomeFantasialList(@PathVariable("nomeFastasia") String nomeFastasia) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.existeNomeFantasiaList(nomeFastasia.trim().toUpperCase());
+
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultasCategoria/{categoria}")
+	public ResponseEntity<PessoaJuridica> existeCategoria(@PathVariable("categoria") String categoria) {
+
+		PessoaJuridica pessoaJuridica = pessoaRepository.existeCategoria(categoria.trim().toUpperCase());
+
+		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaCategoria/{categoria}")
+	public ResponseEntity<List<PessoaJuridica>> existeCategoriaList(@PathVariable("categoria") String categoria) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.existeCategoriaList(categoria.trim().toUpperCase());
+
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultasRazaoSocial/{razaoSocial}")
+	public ResponseEntity<PessoaJuridica> existeRazaoSocial(@PathVariable("razaoSocial") String razaoSocial) {
+
+		PessoaJuridica pessoaJuridica = pessoaRepository.existeinscMunicipal(razaoSocial.trim().toUpperCase());
+
+		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisainscMunicipal/{razaoSocial}")
+	public ResponseEntity<List<PessoaJuridica>> existeRazaoSocialList(@PathVariable("razaoSocial") String razaoSocial) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.existeRazaoSocialList(razaoSocial.trim().toUpperCase());
+
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultasinscMunicipal/{inscMunicipal}")
+	public ResponseEntity<PessoaJuridica> existeinscMunicipal(@PathVariable("inscMunicipal") String inscMunicipal) {
+
+		PessoaJuridica pessoaJuridica = pessoaRepository.existeinscMunicipal(inscMunicipal.trim().toUpperCase());
+
+		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisainscMunicipal/{inscMunicipal}")
+	public ResponseEntity<List<PessoaJuridica>> existeinscMunicipallList(@PathVariable("inscMunicipal") String inscMunicipal) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.existeinscMunicipallList(inscMunicipal);
+
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultasCnpj/{cnpj}")
+	public ResponseEntity<PessoaJuridica> existeCnpj(@PathVariable("cnpj") String cnpj) {
+
+		PessoaJuridica pessoaJuridica = pessoaRepository.existeCnpj(cnpj);
+
+		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaCnpj/{cnpj}")
+	public ResponseEntity<List<PessoaJuridica>> existeCnpjList(@PathVariable("cnpj") String cnpj) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.existeCnpjList(cnpj);
+
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultasInscEstadual/{inscEstadual}")
+	public ResponseEntity<PessoaJuridica> existeinscEstadual(@PathVariable("inscEstadual") String inscEstadual) {
+
+		PessoaJuridica pessoaJuridica = pessoaRepository.existeinscEstadual(inscEstadual);
+
+		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaInscEstadual/{inscEstadual}")
+	public ResponseEntity<List<PessoaJuridica>> existeinscEstadualList(@PathVariable("inscEstadual") String inscEstadual) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.existeinscEstadualList(inscEstadual);
+
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaPorNomePF/{nome}")
+	public ResponseEntity<List<PessoaFisica>> pesquisaPorNomePF(@PathVariable("nome") String nome) {
+
+		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
+		
+		jdbcTemplate.execute("begin; update tabela_acesso_endpoint set qtd_acesso_endpoint = qtd_acesso_endpoint + 1 where nome_endpoint = 'END_POINT_NOME_PESSOA_FISICA'; commit;");
+		
+		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaPorCpf/{cpf}")
+	public ResponseEntity<List<PessoaFisica>> existeCpfList(@PathVariable("cpf") String cpf) {
+
+		List<PessoaFisica> fisicas = pessoaFisicaRepository.existeCpfList(cpf);
+		
+		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultasCpf/{cpf}")
+	public ResponseEntity<PessoaFisica> existeCpf(@PathVariable("cpf") String cpf) {
+
+		PessoaFisica pessoaFisica = pessoaFisicaRepository.existeCpf(cpf);
+
+		return new ResponseEntity<PessoaFisica>(pessoaFisica, HttpStatus.OK);
+	}
 
 	@ResponseBody
 	@GetMapping(value = "/consultaCep/{cep}")
