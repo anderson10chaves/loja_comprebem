@@ -12,6 +12,7 @@ import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.model.PessoaJuridica;
 import adcsistemas.loja_comprebem.model.Usuario;
 import adcsistemas.loja_comprebem.model.dto.CepDTO;
+import adcsistemas.loja_comprebem.model.dto.ConsultaCnpjDTO;
 import adcsistemas.loja_comprebem.repository.PessoaFisicaRepository;
 import adcsistemas.loja_comprebem.repository.PessoaRepository;
 import adcsistemas.loja_comprebem.repository.UsuarioRepository;
@@ -146,6 +147,10 @@ public class PessoaUserService {
 	
 	public CepDTO consultaCep(String cep) {
 		return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDTO.class).getBody();
+	}
+	
+	public ConsultaCnpjDTO consultaCnpjReceitaWs(String cnpj) {
+		return new RestTemplate().getForEntity("https://receitaws.com.br/v1/cnpj/" + cnpj, ConsultaCnpjDTO.class).getBody();
 	}
 
 }

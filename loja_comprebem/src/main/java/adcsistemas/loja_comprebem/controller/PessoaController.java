@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import adcsistemas.loja_comprebem.enums.TipoPessoa;
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.Endereco;
 import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.model.PessoaJuridica;
 import adcsistemas.loja_comprebem.model.dto.CepDTO;
+import adcsistemas.loja_comprebem.model.dto.ConsultaCnpjDTO;
 import adcsistemas.loja_comprebem.repository.EnderecoRepository;
 import adcsistemas.loja_comprebem.repository.PessoaFisicaRepository;
 import adcsistemas.loja_comprebem.repository.PessoaRepository;
 import adcsistemas.loja_comprebem.service.PessoaUserService;
+import adcsistemas.loja_comprebem.service.ServiceContagemAcessoApi;
 import adcsistemas.loja_comprebem.utils.ValidaCnpj;
 import adcsistemas.loja_comprebem.utils.ValidaCpf;
 
@@ -43,14 +45,15 @@ public class PessoaController {
 	private EnderecoRepository enderecoRepository;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
+	private ServiceContagemAcessoApi serviceContagemAcessoApi;
 
 	@ResponseBody
 	@GetMapping(value = "/pesquisaPorNomePJ/{nome}")
 	public ResponseEntity<List<PessoaJuridica>> pesquisaPorNomePJ(@PathVariable("nome") String nome) {
 
 		List<PessoaJuridica> juridicas = pessoaRepository.pesquisaPorNomePJ(nome.trim().toUpperCase());
+		
+		serviceContagemAcessoApi.atualizaAcessoEndPoint();
 		
 		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
 		
@@ -170,7 +173,7 @@ public class PessoaController {
 
 		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
 		
-		jdbcTemplate.execute("begin; update tabela_acesso_endpoint set qtd_acesso_endpoint = qtd_acesso_endpoint + 1 where nome_endpoint = 'END_POINT_NOME_PESSOA_FISICA'; commit;");
+		serviceContagemAcessoApi.atualizaAcessoEndPoint();
 		
 		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
 		
@@ -203,6 +206,15 @@ public class PessoaController {
 
 		return new ResponseEntity<CepDTO>(cepDTO, HttpStatus.OK);
 	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaCnpjReceitaWs/{cnpj}")
+	public ResponseEntity<ConsultaCnpjDTO> consultaCnpjReceitaWs(@PathVariable("cnpj") String cnpj) {
+
+		ConsultaCnpjDTO consultaCnpjDTO = pessoaUserService.consultaCnpjReceitaWs(cnpj);
+
+		return new ResponseEntity<ConsultaCnpjDTO>(consultaCnpjDTO, HttpStatus.OK);
+	}
 
 	@ResponseBody
 	@PostMapping(value = "/salvarPj")
@@ -211,6 +223,10 @@ public class PessoaController {
 
 		if (pessoaJuridica == null) {
 			throw new ExceptionLojaComprebem("Pessoa Juridica não pode ser nulo!");
+		}
+		
+		if (pessoaJuridica.getTipoPessoa() == null) {
+			throw new ExceptionLojaComprebem("Informe o tipo Jurídico ou Fornecedor");
 		}
 
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpj(pessoaJuridica.getCnpj()) != null) {
@@ -269,6 +285,10 @@ public class PessoaController {
 
 		if (pessoaFisica == null) {
 			throw new ExceptionLojaComprebem("Pessoa Fisica não pode ser nulo!");
+		}
+		
+		if (pessoaFisica.getTipoPessoa() == null) {
+			pessoaFisica.setTipoPessoa(TipoPessoa.FISICA.name());
 		}
 
 		if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpf(pessoaFisica.getCpf()) != null) {
