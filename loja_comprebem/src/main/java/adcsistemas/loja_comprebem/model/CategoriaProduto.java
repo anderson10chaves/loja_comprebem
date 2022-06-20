@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "categoria_produto")
@@ -26,13 +28,15 @@ public class CategoriaProduto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_categoria_produto")
 	private Long id;
 	
+	@Size(min = 3, message = "Categoria deve conter no minímo 3 caracteres")
+	@NotBlank(message = "Categoria é Obrigatório")
 	@Column(nullable = false)
 	private String nomeDesc;
 	
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa = new PessoaJuridica();
 
 	public Long getId() {
 		return id;
@@ -50,11 +54,11 @@ public class CategoriaProduto implements Serializable {
 		this.nomeDesc = nomeDesc;
 	}
 
-	public Pessoa getEmpresa() {
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 

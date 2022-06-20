@@ -47,6 +47,10 @@ public class AcessoController {
 	@ResponseBody
 	@PostMapping(value = "/deleteAcesso")
 	public ResponseEntity<?> deleteAcesso(@RequestBody Acesso acesso) {
+		
+		if(acessoRepository.findById(acesso.getId()).isEmpty() == false) {
+			return new ResponseEntity<>("Acesso já removido", HttpStatus.OK);
+		}
 
 		acessoRepository.deleteById(acesso.getId());
 
@@ -56,6 +60,10 @@ public class AcessoController {
 	@ResponseBody
 	@DeleteMapping(value = "/deleteAcessoId/{id}")
 	public ResponseEntity<?> deleteAcessoId(@PathVariable("id") Long id) {
+		
+		if(acessoRepository.findById(id).isPresent() == false) {
+			return new ResponseEntity<>("Acesso já removido", HttpStatus.OK);
+		}
 
 		acessoRepository.deleteById(id);
 
