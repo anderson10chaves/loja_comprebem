@@ -34,7 +34,7 @@ public class AcessoController {
 		if (acesso.getId() == null) {
 			List<Acesso> acessos = acessoRepository.buscarAcessoDesc(acesso.getDescricao().toUpperCase());
 
-			if (acessos.isEmpty()) {
+			if (!acessos.isEmpty()) {
 				throw new ExceptionLojaComprebem("Acesso já existe com essa descrição: " + acesso.getDescricao());
 			}
 		}
@@ -48,7 +48,7 @@ public class AcessoController {
 	@PostMapping(value = "/deleteAcesso")
 	public ResponseEntity<?> deleteAcesso(@RequestBody Acesso acesso) {
 		
-		if(acessoRepository.findById(acesso.getId()).isEmpty() == false) {
+		if(acessoRepository.findById(acesso.getId()).isPresent() == false) {
 			return new ResponseEntity<>("Acesso já removido", HttpStatus.OK);
 		}
 

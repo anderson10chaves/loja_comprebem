@@ -34,7 +34,7 @@ public class CategoriaProdutoController {
 		}
 		
 		if(categoriaProduto.getId() == null && categoriaProdutoRepository.existeCategoriaProduto(categoriaProduto.getNomeDesc().trim().toString())) {
-			throw new ExceptionLojaComprebem("Categoria já cadastrado com esse nome");
+			throw new ExceptionLojaComprebem("Categoria já cadastrado com esse nome" + categoriaProduto.getNomeDesc());
 		}
 		
 		CategoriaProduto categoriaProdutoSalvo = categoriaProdutoRepository.save(categoriaProduto);
