@@ -42,10 +42,6 @@ public class Produto implements Serializable {
 	@Column(columnDefinition = "text", length = 2000, nullable = false)
 	private String descricao;
 
-	@OneToOne
-	@JoinColumn(name = "nota_item_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_item_produto_fk"))
-	private NotaItemProduto notaItemProduto;
-
 	@NotNull(message = "Peso do Produto é Obrigatório")
 	@Column(nullable = false)
 	private Double peso;
@@ -211,14 +207,6 @@ public class Produto implements Serializable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
-	}
-
-	public NotaItemProduto getNotaItemProduto() {
-		return notaItemProduto;
-	}
-
-	public void setNotaItemProduto(NotaItemProduto notaItemProduto) {
-		this.notaItemProduto = notaItemProduto;
 	}
 
 	public PessoaJuridica getEmpresa() {

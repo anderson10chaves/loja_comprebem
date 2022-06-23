@@ -71,7 +71,7 @@ public class NotaFiscalCompraController {
 			return new ResponseEntity<>("Nota Fiscal Compra já removido", HttpStatus.OK);
 		}
 		
-		notaFiscalCompraRepository.deleteById(notaFiscalCompra.getId());
+		notaFiscalCompraRepository.deleteItemNotaFiscalCompra(notaFiscalCompra.getId());
 
 		return new ResponseEntity<>("Nota Fiscal Compra excluído com sucesso", HttpStatus.OK);
 	}
