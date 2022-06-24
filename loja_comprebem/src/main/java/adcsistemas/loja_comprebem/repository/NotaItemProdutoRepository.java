@@ -29,7 +29,7 @@ public interface NotaItemProdutoRepository extends JpaRepository<NotaItemProduto
 			
 	@Transactional
 	@Modifying(flushAutomatically = true, clearAutomatically = true)
-	@Query(nativeQuery = true, value = "delete from nota_item_produto where id = ?1")
+	@Query(nativeQuery = true, value = "delete from imagem_produto where id = ?1")
 	void deleteNotaItemProduto(Long id);
 
 }
