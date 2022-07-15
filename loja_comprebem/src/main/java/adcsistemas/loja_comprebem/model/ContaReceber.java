@@ -53,15 +53,15 @@ public class ContaReceber implements Serializable {
 	
 	private BigDecimal valorDesconto;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@ManyToOne(targetEntity = PessoaFisica.class)
 	@JoinColumn(name = "pessoa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-	private Pessoa pessoa;
+	private PessoaFisica pessoaFisica;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica pessoaJuridica;
 
 	public Long getId() {
 		return id;
@@ -119,20 +119,20 @@ public class ContaReceber implements Serializable {
 		this.valorDesconto = valorDesconto;
 	}
 
-	public Pessoa getPessoa() {
-		return pessoa;
+	public PessoaFisica getPessoaFisica() {
+		return pessoaFisica;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public void setPessoaFisica(PessoaFisica pessoaFisica) {
+		this.pessoaFisica = pessoaFisica;
 	}
 
-	public Pessoa getEmpresa() {
-		return empresa;
+	public PessoaJuridica getPessoaJuridica() {
+		return pessoaJuridica;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
-		this.empresa = empresa;
+	public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
+		this.pessoaJuridica = pessoaJuridica;
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class NotaItemProdutoController {
 			throw new ExceptionLojaComprebem("A nota Fiscal é Obrigatório");
 		};
 		
-		if(notaItemProduto.getEmpresa() == null || notaItemProduto.getEmpresa().getId() <= 0) {
+		if(notaItemProduto.getPessoaJuridica() == null || notaItemProduto.getPessoaJuridica().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Empresa referente a nota é Obrigatório");
 		};
 		

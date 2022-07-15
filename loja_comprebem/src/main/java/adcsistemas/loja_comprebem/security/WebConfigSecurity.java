@@ -30,8 +30,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-		.disable().authorizeRequests().antMatchers("/").permitAll()
-		.antMatchers("/index").permitAll()
+		.disable().authorizeRequests().antMatchers("/", "/v3/api-docs", "/v3/api-docs/swagger-config", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+		.antMatchers("/index", "/swagger-ui/index.html/**", "/v3/api-docs/swagger-config", "/v3/api-docs", "/webjars/**").permitAll()
 		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 		.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -49,8 +49,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		//web.ignoring().antMatchers(HttpMethod.GET, "/salvarAcesso", "/deleteAcesso")
-		//.antMatchers(HttpMethod.POST, "/salvarAcesso", "/deleteAcesso");
+		//web.ignoring().antMatchers(HttpMethod.GET, "/lojacomprebem/v3/api-docs", "/swagger-ui/index.html/**", "/salvarAcesso", "/deleteAcesso")
+		//.antMatchers(HttpMethod.POST, "/lojacomprebem/v3/api-docs", "/salvarAcesso", "/deleteAcesso");
 	}
 
 

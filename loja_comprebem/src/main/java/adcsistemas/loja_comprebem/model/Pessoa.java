@@ -61,9 +61,9 @@ public abstract class Pessoa implements Serializable {
 	private List<Endereco> enderecos = new ArrayList<Endereco>();
 
 	@JsonIgnore
-	@ManyToOne(targetEntity = Pessoa.class)
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica pessoaJuridica;
 
 	public Long getId() {
 		return id;
@@ -113,12 +113,12 @@ public abstract class Pessoa implements Serializable {
 		this.tipoPessoa = tipoPessoa;
 	}
 
-	public Pessoa getEmpresa() {
-		return empresa;
+	public PessoaJuridica getPessoaJuridica() {
+		return pessoaJuridica;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
-		this.empresa = empresa;
+	public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
+		this.pessoaJuridica = pessoaJuridica;
 	}
 
 	@Override

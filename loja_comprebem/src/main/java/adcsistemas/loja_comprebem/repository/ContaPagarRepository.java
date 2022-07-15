@@ -16,13 +16,13 @@ public interface ContaPagarRepository extends JpaRepository<ContaPagar, Long> {
 	@Query("select a from ContaPagar a where upper(trim(a.descricao)) like %?1%")
 	List<ContaPagar> pesquisaContaPagarDesc(String descricao);
 	
-	@Query("select a from ContaPagar a where a.pessoa.id = ?1")
+	@Query("select a from ContaPagar a where a.pessoaFisica.id = ?1")
 	List<ContaPagar> pesquisaContaPagarPessoa(Long idPessoa);
 	
 	@Query("select a from ContaPagar a where a.pessoa_fornecedor.id = ?1")
 	List<ContaPagar> pesquisaContaPagarPessoaFornecedor(Long idPessoaFornecedor);
 	
-	@Query("select a from ContaPagar a where a.empresa.id = ?1")
+	@Query("select a from ContaPagar a where a.pessoaJuridica.id = ?1")
 	List<ContaPagar> pesquisaContaPagarEmpresa(Long idEmpresa);
 
 }

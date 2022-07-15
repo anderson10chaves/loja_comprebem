@@ -62,15 +62,15 @@ public class ContaPagar implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date dtPagamento;
 	
-	@ManyToOne(targetEntity = PessoaJuridica.class)
+	@ManyToOne(targetEntity = PessoaFisica.class)
 	@JoinColumn(name = "pessoa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-	private PessoaJuridica pessoa;
+	private PessoaFisica pessoaFisica;
 	
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private PessoaJuridica empresa;
+	private PessoaJuridica pessoaJuridica;
 	
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "pessoa_fornecedor_id", nullable = false,
@@ -133,20 +133,20 @@ public class ContaPagar implements Serializable {
 		this.dtPagamento = dtPagamento;
 	}
 
-	public PessoaJuridica getPessoa() {
-		return pessoa;
+	public PessoaFisica getPessoaFisica() {
+		return pessoaFisica;
 	}
 
-	public void setPessoa(PessoaJuridica pessoa) {
-		this.pessoa = pessoa;
+	public void setPessoaFisica(PessoaFisica pessoaFisica) {
+		this.pessoaFisica = pessoaFisica;
 	}
 
-	public PessoaJuridica getEmpresa() {
-		return empresa;
+	public PessoaJuridica getPessoaJuridica() {
+		return pessoaJuridica;
 	}
 
-	public void setEmpresa(PessoaJuridica empresa) {
-		this.empresa = empresa;
+	public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
+		this.pessoaJuridica = pessoaJuridica;
 	}
 
 	public PessoaJuridica getPessoa_fornecedor() {

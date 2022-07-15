@@ -35,7 +35,7 @@ public class ImagemProdutoController {
 		imagemProdutoDTO.setId(imagemProduto.getId());
 		imagemProdutoDTO.setImagemOriginal(imagemProduto.getImagemOriginal());
 		imagemProdutoDTO.setImagemMiniatura(imagemProdutoDTO.getImagemMiniatura());
-		imagemProdutoDTO.setEmpresa(imagemProduto.getEmpresa().getId());
+		imagemProdutoDTO.setEmpresa(imagemProduto.getPessoaJuridica().getId());
 		imagemProdutoDTO.setProduto(imagemProduto.getProduto().getId());
 		
 		
@@ -94,7 +94,7 @@ public class ImagemProdutoController {
 			imagemProdutoDTO.setId(imagemProduto.getId());
 			imagemProdutoDTO.setImagemOriginal(imagemProduto.getImagemOriginal());
 			imagemProdutoDTO.setImagemMiniatura(imagemProdutoDTO.getImagemMiniatura());
-			imagemProdutoDTO.setEmpresa(imagemProduto.getEmpresa().getId());
+			imagemProdutoDTO.setEmpresa(imagemProduto.getPessoaJuridica().getId());
 			imagemProdutoDTO.setProduto(imagemProduto.getProduto().getId());
 			
 			dtos.add(imagemProdutoDTO);

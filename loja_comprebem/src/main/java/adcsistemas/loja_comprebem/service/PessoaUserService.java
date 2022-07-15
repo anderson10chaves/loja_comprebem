@@ -41,8 +41,8 @@ public class PessoaUserService {
 		// pessoaJuridica = pessoaRepository.save(pessoaJuridica);
 
 		for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
-			pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
-			pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
+			pessoaJuridica.getEnderecos().get(i).setPessoaJuridica(pessoaJuridica);
+			pessoaJuridica.getEnderecos().get(i).setPessoaJuridica(pessoaJuridica);;
 		}
 
 		pessoaJuridica = pessoaRepository.save(pessoaJuridica);
@@ -58,7 +58,7 @@ public class PessoaUserService {
 
 			usuarioPj = new Usuario();
 			usuarioPj.setDataAtualSenha(Calendar.getInstance().getTime());
-			usuarioPj.setEmpresa(pessoaJuridica);
+			usuarioPj.setPessoa(pessoaJuridica);
 			usuarioPj.setPessoa(pessoaJuridica);
 			usuarioPj.setLogin(pessoaJuridica.getEmail());
 
@@ -113,7 +113,7 @@ public class PessoaUserService {
 
 					usuarioPf = new Usuario();
 					usuarioPf.setDataAtualSenha(Calendar.getInstance().getTime());
-					usuarioPf.setEmpresa(pessoaFisica.getEmpresa());
+					usuarioPf.setPessoa(pessoaFisica.getPessoaJuridica());
 					usuarioPf.setPessoa(pessoaFisica);
 					usuarioPf.setLogin(pessoaFisica.getEmail());
 

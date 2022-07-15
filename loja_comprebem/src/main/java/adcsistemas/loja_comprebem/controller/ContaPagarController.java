@@ -30,11 +30,11 @@ public class ContaPagarController {
 	public ResponseEntity<ContaPagar> salvarContaPagar(@RequestBody @Valid ContaPagar contaPagar)
 			throws ExceptionLojaComprebem {
 
-		if (contaPagar.getEmpresa() == null || contaPagar.getEmpresa().getId() <= 0) {
+		if (contaPagar.getPessoaJuridica() == null || contaPagar.getPessoaJuridica().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Empresa deve ser informada");
 		}
 
-		if (contaPagar.getPessoa() == null || contaPagar.getPessoa().getId() <= 0) {
+		if (contaPagar.getPessoaFisica() == null || contaPagar.getPessoaFisica().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Pessoa Juridica deve ser informada");
 		}
 

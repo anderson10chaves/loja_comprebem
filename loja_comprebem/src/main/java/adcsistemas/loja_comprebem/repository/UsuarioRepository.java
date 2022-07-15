@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import adcsistemas.loja_comprebem.model.Usuario;
 
 @Repository
+@Transactional
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 	@Query(value = "select u from Usuario u where u.login = ?1")

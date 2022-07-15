@@ -24,7 +24,7 @@ public interface NotaItemProdutoRepository extends JpaRepository<NotaItemProduto
 	@Query("select a from NotaItemProduto a where a.notaFiscalCompra.id = ?1")
 	List<NotaItemProduto> pesquisaNotaItemNotaFiscal(Long idNotaFiscal);
 	
-	@Query("select a from NotaItemProduto a where a.empresa.id = ?1")
+	@Query("select a from NotaItemProduto a where a.pessoaJuridica.id = ?1")
 	List<NotaItemProduto> pesquisaNotaItemEmpresa(Long idEmpresa);
 			
 	@Transactional

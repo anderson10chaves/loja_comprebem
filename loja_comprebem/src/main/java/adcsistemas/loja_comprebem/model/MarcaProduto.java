@@ -33,7 +33,7 @@ public class MarcaProduto implements Serializable {
 
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private PessoaJuridica empresa;
+	private PessoaJuridica pessoaJuridica;
 
 	public Long getId() {
 		return id;
@@ -51,13 +51,7 @@ public class MarcaProduto implements Serializable {
 		this.nomeDesc = nomeDesc;
 	}
 
-	public PessoaJuridica getEmpresa() {
-		return empresa;
-	}
-
-	public void setEmpresa(PessoaJuridica empresa) {
-		this.empresa = empresa;
-	}
+	
 
 	@Override
 	public int hashCode() {

@@ -45,11 +45,11 @@ public class NotaFiscalCompraController {
 			}
 		}
 		
-		if(notaFiscalCompra.getPessoa() == null || notaFiscalCompra.getPessoa().getId() <= 0) {
+		if(notaFiscalCompra.getPessoaFisica() == null || notaFiscalCompra.getPessoaFisica().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Pessoa Jurídica referente a Nota Fiscal de Compra deve ser Informada");
 		}
 		
-		if(notaFiscalCompra.getEmpresa() == null || notaFiscalCompra.getEmpresa().getId() <= 0) {
+		if(notaFiscalCompra.getPessoaJuridica() == null || notaFiscalCompra.getPessoaJuridica().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Empresa referente a Nota Fiscal de Compra deve ser Informada");
 		}
 		

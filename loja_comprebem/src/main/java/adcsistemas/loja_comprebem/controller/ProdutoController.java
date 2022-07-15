@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -50,12 +49,12 @@ public class ProdutoController {
 			throw new ExceptionLojaComprebem("Nome do Produto deve contér no minimo 10 caracteres");
 		}
 		
-		if(produto.getEmpresa() == null || produto.getEmpresa().getId() <= 0) {
+		if(produto.getPessoaJuridica() == null || produto.getPessoaJuridica().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Empresa deve ser informada");
 		}
 		
 		if (produto.getId() == null) {
-			List<Produto> produtos = produtoRepository.pesquisaProdutoNome(produto.getNome().toUpperCase(), produto.getEmpresa().getId());
+			List<Produto> produtos = produtoRepository.pesquisaProdutoNomeEmpresa(produto.getNome().toUpperCase(), produto.getPessoaJuridica().getId());
 			
 			if (!produtos.isEmpty()) {
 				throw new ExceptionLojaComprebem("Produto já existe com essa descrição: " + produto.getNome());
@@ -86,7 +85,7 @@ public class ProdutoController {
 			
 			for(int x = 0; x < produto.getImagens().size(); x++) {
 				produto.getImagens().get(x).setProduto(produto);
-				produto.getImagens().get(x).setEmpresa(produto.getEmpresa());
+				produto.getImagens().get(x).setPessoaJuridica(produto.getPessoaJuridica());
 				
 				String base64Image = "";
 				
@@ -136,8 +135,8 @@ public class ProdutoController {
 				.append(" estoque esta baixo: " + produto.getQtdEstoque());
 			html.append("<p> Id Produto..: ").append(produto.getId()).append("</p>");
 			
-			if(produto.getEmpresa().getEmail() != null) {
-				sendEmailService.enviarEmailHtml("Produto sem estoque", html.toString(), produto.getEmpresa().getEmail());
+			if(produto.getPessoaJuridica().getEmail() != null) {
+				sendEmailService.enviarEmailHtml("Produto sem estoque", html.toString(), produto.getPessoaJuridica().getEmail());
 			}
 			
 			
@@ -189,7 +188,7 @@ public class ProdutoController {
 	@GetMapping(value = "/pesquisaProdutoDesc/{desc}")
 	public ResponseEntity<List<Produto>> pesquisaProdutoDesc(@PathVariable("nome") String nome) {
 
-		List<Produto> produto = produtoRepository.pesquisaProdutoNome(nome.toUpperCase());
+		List<Produto> produto = produtoRepository.pesquisaProdutoPorNome(nome.toUpperCase());
 
 		return new ResponseEntity<List<Produto>>(produto, HttpStatus.OK);
 	}

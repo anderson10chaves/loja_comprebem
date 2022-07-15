@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import adcsistemas.loja_comprebem.model.MarcaProduto;
+import adcsistemas.loja_comprebem.model.FormaPagamento;
 
 @Repository
 @Transactional
-public interface MarcaProdutoRepository extends JpaRepository<MarcaProduto, Long> {
+public interface FormaPagamentoRepository extends JpaRepository<FormaPagamento, Long> {
 
-	@Query("select a from MarcaProduto a where upper(trim(a.nomeDesc)) like %?1%")
-	List<MarcaProduto> pesquisaMarcaProdutoNome(String nomeDesc);
-	
+	@Query("select a from FormaPagamento a where upper(trim(a.descricao)) like %?1%")
+	List<FormaPagamento> buscarFormaPagamentoDesc(String desc);
+
 }

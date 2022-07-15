@@ -2,8 +2,8 @@ package adcsistemas.loja_comprebem.enums;
 
 public enum TipoEndereco {
 	
-	COBRANCA("Cobrança"),
-	ENTREGA("Entrega");
+	COBRANCA("COBRANÇA"),
+	ENTREGA("ENTREGA");
 	
 	private String descricao;
 	

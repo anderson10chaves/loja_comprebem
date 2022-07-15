@@ -31,7 +31,7 @@ public class AvaliacaoProdutoController {
 	@PostMapping(value = "/salvarAvaliacaoProduto")
 	public ResponseEntity<AvaliacaoProduto> salvarAvaliacaoProduto(@RequestBody @Valid AvaliacaoProduto avaliacaoProduto) throws ExceptionLojaComprebem {
 		
-		if(avaliacaoProduto.getEmpresa() == null || (avaliacaoProduto.getEmpresa() != null && avaliacaoProduto.getEmpresa().getId() < 0)) {
+		if(avaliacaoProduto.getPessoaJuridica() == null || (avaliacaoProduto.getPessoaJuridica() != null && avaliacaoProduto.getPessoaJuridica().getId() < 0)) {
 			throw new ExceptionLojaComprebem("Informe a Empresa");
 		}
 		
@@ -79,7 +79,7 @@ public class AvaliacaoProdutoController {
 		  avaliacaoProdutoDTO.setDescricao(avaliacaoProduto.getDescricao());
 		  avaliacaoProdutoDTO.setNota(avaliacaoProduto.getNota());
 		  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoa().getId());
-		  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getEmpresa().getId());
+		  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getPessoaJuridica().getId());
 		  avaliacaoProdutoDTO.setProduto(avaliacaoProduto.getProduto().getId());
 		 
 		  dtos.add(avaliacaoProdutoDTO);
@@ -104,7 +104,7 @@ public class AvaliacaoProdutoController {
 			  avaliacaoProdutoDTO.setDescricao(avaliacaoProduto.getDescricao());
 			  avaliacaoProdutoDTO.setNota(avaliacaoProduto.getNota());
 			  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoa().getId());
-			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getEmpresa().getId());
+			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getPessoaJuridica().getId());
 			  avaliacaoProdutoDTO.setProduto(avaliacaoProduto.getProduto().getId());
 			  
 			  dtos.add(avaliacaoProdutoDTO);
@@ -128,7 +128,7 @@ public class AvaliacaoProdutoController {
 			  avaliacaoProdutoDTO.setDescricao(avaliacaoProduto.getDescricao());
 			  avaliacaoProdutoDTO.setNota(avaliacaoProduto.getNota());
 			  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoa().getId());
-			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getEmpresa().getId());
+			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getPessoaJuridica().getId());
 			  avaliacaoProdutoDTO.setProduto(avaliacaoProduto.getProduto().getId());
 			  
 			  dtos.add(avaliacaoProdutoDTO);
