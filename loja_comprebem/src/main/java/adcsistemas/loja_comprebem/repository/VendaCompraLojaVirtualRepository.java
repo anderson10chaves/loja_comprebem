@@ -11,4 +11,6 @@ import adcsistemas.loja_comprebem.model.VendaCompraLojaVirtual;
 @Transactional
 public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCompraLojaVirtual, Long> {
 
+	//@Query("select a from VendaCompraLojaVirtual a where a.id = ?1")
+	//List<VendaCompraLojaVirtual> pesquisaVendaId(Long idVenda);
 }
