@@ -9,6 +9,17 @@ public class VendaService {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	public void deleteVendaLogicaBanco(Long idVenda) {
+		String sql = "begin; update vd_cp_loja_virt set ativo = true where id = " + idVenda +"; commit;";
+		jdbcTemplate.execute(sql);
+		
+	}
+	
+	public void ativaVendaRegistroBanco(Long idVenda) {
+		String sql = "begin; update vd_cp_loja_virt set ativo = false where id = " + idVenda +"; commit;";
+		jdbcTemplate.execute(sql);
+	}
 
 	public void deleteVendaTotalBanco(Long idVenda) {
 
@@ -22,4 +33,8 @@ public class VendaService {
 
 		jdbcTemplate.execute(value);
 	}
+
+	
+
+	
 }
