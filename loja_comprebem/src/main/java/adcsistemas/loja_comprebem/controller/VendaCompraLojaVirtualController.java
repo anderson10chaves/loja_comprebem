@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +17,15 @@ import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.Endereco;
 import adcsistemas.loja_comprebem.model.ItemVendaLoja;
 import adcsistemas.loja_comprebem.model.PessoaFisica;
+import adcsistemas.loja_comprebem.model.StatusRastreio;
 import adcsistemas.loja_comprebem.model.VendaCompraLojaVirtual;
 import adcsistemas.loja_comprebem.model.dto.ItemVendaDTO;
 import adcsistemas.loja_comprebem.model.dto.VendaCompraLojaVirtualDTO;
 import adcsistemas.loja_comprebem.repository.EnderecoRepository;
 import adcsistemas.loja_comprebem.repository.NotaFiscalVendaRepository;
+import adcsistemas.loja_comprebem.repository.StatusRastreioRepository;
 import adcsistemas.loja_comprebem.repository.VendaCompraLojaVirtualRepository;
+import adcsistemas.loja_comprebem.service.VendaService;
 
 @RestController
 public class VendaCompraLojaVirtualController {
@@ -37,6 +41,12 @@ public class VendaCompraLojaVirtualController {
 
 	@Autowired
 	private NotaFiscalVendaRepository notaFiscalVendaRepository;
+	
+	@Autowired
+	private StatusRastreioRepository statusRastreioRepository;
+	
+	@Autowired
+	private VendaService vendaService;
 
 	@ResponseBody
 	@PostMapping(value = "/salvarVendas")
@@ -58,6 +68,16 @@ public class VendaCompraLojaVirtualController {
 		vendaCompraLojaVirtual.getNotaFiscalVenda().setPessoaJuridica(vendaCompraLojaVirtual.getPessoaJuridica());
 		/* Salva primeiro a venda e todos dados do cliente */
 		vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.saveAndFlush(vendaCompraLojaVirtual);
+		
+		StatusRastreio statusRastreio = new StatusRastreio();
+		statusRastreio.setCentroDistruicao("Loja Local");
+		statusRastreio.setCidade("Local");
+		statusRastreio.setPessoaJuridica(vendaCompraLojaVirtual.getPessoaJuridica());
+		statusRastreio.setEstado("Local");
+		statusRastreio.setStatus("Inicio Compra");
+		statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+		
+		statusRastreioRepository.save(statusRastreio);
 
 		for (int i = 0; i < vendaCompraLojaVirtual.getItemVendaLojas().size(); i++) {
 			vendaCompraLojaVirtual.getItemVendaLojas().get(i)
@@ -140,6 +160,15 @@ public class VendaCompraLojaVirtualController {
 
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(vendaCompraLojaVirtualDTO, HttpStatus.OK);
 
+	}
+	
+	@ResponseBody
+	@DeleteMapping(value = "/deleteVendaTotalBanco/{idVenda}")
+	public ResponseEntity<String> deleteVendaTotalBanco(@PathVariable(value = "idVenda") Long idVenda) {
+		
+		vendaService.deleteVendaTotalBanco(idVenda);
+		
+		return new ResponseEntity<String>("Atenção esta exclusão não poderá ser recuperada, se deseja excluir!", HttpStatus.OK);
 	}
 
 }
