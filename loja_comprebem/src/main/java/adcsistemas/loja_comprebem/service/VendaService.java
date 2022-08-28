@@ -48,10 +48,10 @@ public class VendaService {
 	@SuppressWarnings("unchecked")
 	public List<VendaCompraLojaVirtual> pesquisaVendaDinamicaData(String data1, String data2) {
 		
-		String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i"
-				+ " where i.vendaCompraLojaVirtual.ativo = false"
-				+ " and i.vendaCompraLojaVirtual.dataVenda >=  '" + data1 + "'"
-				+ " and i.vendaCompraLojaVirtual.dataVenda <=  '" + data2 + "'";
+		String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+				+ " where i.vendaCompraLojaVirtual.ativo = false "
+				+ " and i.vendaCompraLojaVirtual.dataVenda >= '" + data1 + "'"
+				+ " and i.vendaCompraLojaVirtual.dataVenda <= '" + data2 + "'";
 		
 		return entityManager.createQuery(sql).getResultList();
 		
