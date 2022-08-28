@@ -1,7 +1,9 @@
 package adcsistemas.loja_comprebem.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -102,6 +104,8 @@ public class VendaCompraLojaVirtualController {
 		vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
 
 		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaFisica());
+		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaJuridica());
+		
 		vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
 
 		vendaCompraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
@@ -144,6 +148,7 @@ public class VendaCompraLojaVirtualController {
 		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaFisica());
 
 		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaJuridica());
+		
 		vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
 
 		vendaCompraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
@@ -281,7 +286,7 @@ public class VendaCompraLojaVirtualController {
 			@PathVariable("data2") String data2) throws ParseException{
 
 		List<VendaCompraLojaVirtual> vendaCompraLojaVirtual = null;
-
+		
 		vendaCompraLojaVirtual = vendaService.pesquisaVendaDinamicaData(data1, data2);
 
 		if (vendaCompraLojaVirtual == null) {
@@ -351,6 +356,8 @@ public class VendaCompraLojaVirtualController {
 					.pesquisaVendaEndEntrega(valor.toUpperCase().trim());
 		} else if (tipoconsulta.equalsIgnoreCase("CEP")) {
 			vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.pesquisaVendaCep(valor.toUpperCase().trim());
+		}  else if (tipoconsulta.equalsIgnoreCase("CPF")) {
+			vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.pesquisaVendaCpf(valor.toUpperCase().trim());
 		}
 		if (vendaCompraLojaVirtual == null) {
 			vendaCompraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();

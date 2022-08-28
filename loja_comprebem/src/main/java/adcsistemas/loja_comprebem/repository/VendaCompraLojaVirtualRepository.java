@@ -21,14 +21,18 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
 	@Query(value = "select i.vendaCompraLojaVirtual from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and i.produto.id = ?1")
 	List<VendaCompraLojaVirtual> vendaPorProduto(Long idProduto);
 	
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and upper(trim(i.produto.nome)) like %?1%")
+	List<VendaCompraLojaVirtual> pesquisaVendaNomeProduto(String valor);
+	
+	@Query(value = "select i.vendaCompraLojaVirtual from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and i.pessoaFisica.id = ?1")
+	List<VendaCompraLojaVirtual> vendaPorNomeCliente(Long idCliente);
+	
 	@Query(value = "select i.vendaCompraLojaVirtual from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and i.produto.id = ?1")
 	List<VendaCompraLojaVirtual> vendaPorProdutoAtivo(Long idProduto);
 	
 	@Query(value = "select i.vendaCompraLojaVirtual from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = true and i.produto.id = ?1")
 	List<VendaCompraLojaVirtual> vendaPorProdutoInativo(Long idProduto);
 	
-	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and upper(trim(i.produto.nome)) like %?1%")
-	List<VendaCompraLojaVirtual> pesquisaVendaNomeProduto(String valor);
 	
 	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and upper(trim(i.vendaCompraLojaVirtual.pessoaFisica.nome)) like %?1%")
 	List<VendaCompraLojaVirtual> pesquisaVendaNomeCliente(String nomepessoa);
@@ -41,12 +45,10 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
 
 	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and upper(trim(i.vendaCompraLojaVirtual.enderecoEntrega.cep)) like %?1%")
 	List<VendaCompraLojaVirtual> pesquisaVendaCep(String cep);
+    
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and i.vendaCompraLojaVirtual.dataVenda >= ?1 and i.vendaCompraLojaVirtual.dataVenda <= ?2 ")
+	List<VendaCompraLojaVirtual> pesquisaVendaDinamicaData(Date data1, Date data2);
 
-	@Query(value="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
-			+ " where i.vendaCompraLojaVirtual.ativo = false "
-			+ " and i.vendaCompraLojaVirtual.dataVenda >= ?1 "
-			+ " and i.vendaCompraLojaVirtual.dataVenda <= ?2 ")
-	List<VendaCompraLojaVirtual> consultaVendaFaixaData(Date data1, Date data2);
-    	
-	
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = false and upper(trim(i.vendaCompraLojaVirtual.pessoaFisica.cpf)) like %?1%")
+	List<VendaCompraLojaVirtual> pesquisaVendaCpf(String cpf);
 }
