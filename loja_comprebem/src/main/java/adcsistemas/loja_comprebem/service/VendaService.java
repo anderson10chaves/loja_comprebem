@@ -1,11 +1,21 @@
 package adcsistemas.loja_comprebem.service;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import adcsistemas.loja_comprebem.model.VendaCompraLojaVirtual;
+
 @Service
 public class VendaService {
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -34,6 +44,20 @@ public class VendaService {
 		jdbcTemplate.execute(value);
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	public List<VendaCompraLojaVirtual> pesquisaVendaDinamicaData(String data1, String data2) {
+		
+		String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i"
+				+ " where i.vendaCompraLojaVirtual.ativo = false"
+				+ " and i.vendaCompraLojaVirtual.dataVenda >=  '" + data1 + "'"
+				+ " and i.vendaCompraLojaVirtual.dataVenda <=  '" + data2 + "'";
+		
+		return entityManager.createQuery(sql).getResultList();
+		
+	}
+
+	
 	
 
 	

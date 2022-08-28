@@ -38,5 +38,9 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
 	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = true and upper(trim(i.vendaCompraLojaVirtual.enderecoEntrega.logradouro)) like %?1%")
 	List<VendaCompraLojaVirtual> pesquisaVendaEndEntrega(String endEntrega);
 
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where i.vendaCompraLojaVirtual.ativo = true and upper(trim(i.vendaCompraLojaVirtual.enderecoEntrega.cep)) like %?1%")
+	List<VendaCompraLojaVirtual> pesquisaVendaCep(String cep);
+
+	
 	
 }
