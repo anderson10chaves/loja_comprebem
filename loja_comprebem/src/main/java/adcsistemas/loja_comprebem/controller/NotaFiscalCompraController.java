@@ -45,7 +45,7 @@ public class NotaFiscalCompraController {
 			}
 		}
 		
-		if(notaFiscalCompra.getPessoaFisica() == null || notaFiscalCompra.getPessoaFisica().getId() <= 0) {
+		if(notaFiscalCompra.getPessoaFornecedor() == null || notaFiscalCompra.getPessoaFornecedor().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Pessoa Jurídica referente a Nota Fiscal de Compra deve ser Informada");
 		}
 		

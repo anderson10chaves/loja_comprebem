@@ -58,7 +58,7 @@ public class PessoaUserService {
 
 			usuarioPj = new Usuario();
 			usuarioPj.setDataAtualSenha(Calendar.getInstance().getTime());
-			usuarioPj.setPessoa(pessoaJuridica);
+			usuarioPj.setPessoaJuridica(pessoaJuridica);
 			usuarioPj.setPessoa(pessoaJuridica);
 			usuarioPj.setLogin(pessoaJuridica.getEmail());
 
@@ -113,7 +113,7 @@ public class PessoaUserService {
 
 					usuarioPf = new Usuario();
 					usuarioPf.setDataAtualSenha(Calendar.getInstance().getTime());
-					usuarioPf.setPessoa(pessoaFisica.getPessoaJuridica());
+					usuarioPf.setPessoaJuridica(pessoaFisica.getPessoaJuridica());
 					usuarioPf.setPessoa(pessoaFisica);
 					usuarioPf.setLogin(pessoaFisica.getEmail());
 

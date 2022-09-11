@@ -20,7 +20,7 @@ public interface NotaFiscalCompraRepository extends JpaRepository<NotaFiscalComp
 	@Query("select a from NotaFiscalCompra a where upper(trim(a.descricaoObservacao)) like %?1%")
 	List<NotaFiscalCompra> pesquisaNotaFiscalDesc(String descricaoObservacao);
 	
-	@Query("select a from NotaFiscalCompra a where a.pessoaFisica.id = ?1")
+	@Query("select a from NotaFiscalCompra a where a.pessoaFornecedor.id = ?1")
 	List<NotaFiscalCompra> pesquisaNotaFiscalPessoa(Long idPessoa);
 	
 	@Query("select a from NotaFiscalCompra a where a.contaPagar.id = ?1")
