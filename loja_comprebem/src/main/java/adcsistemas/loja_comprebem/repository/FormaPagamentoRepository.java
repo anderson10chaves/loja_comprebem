@@ -13,6 +13,9 @@ import adcsistemas.loja_comprebem.model.FormaPagamento;
 @Repository
 @Transactional
 public interface FormaPagamentoRepository extends JpaRepository<FormaPagamento, Long> {
+	
+	@Query(value = "select a from FormaPagamento a where a.pessoaJuridica.id = ?1")
+	List<FormaPagamento> findAll(Long idEmpresa);
 
 	@Query("select a from FormaPagamento a where upper(trim(a.descricao)) like %?1%")
 	List<FormaPagamento> buscarFormaPagamentoDesc(String desc);
