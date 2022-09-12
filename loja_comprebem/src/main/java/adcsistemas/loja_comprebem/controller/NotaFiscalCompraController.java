@@ -1,5 +1,6 @@
 package adcsistemas.loja_comprebem.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,13 +18,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.NotaFiscalCompra;
+import adcsistemas.loja_comprebem.model.NotaFiscalVenda;
+import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioCompraNotaFiscalDTO;
 import adcsistemas.loja_comprebem.repository.NotaFiscalCompraRepository;
+import adcsistemas.loja_comprebem.repository.NotaFiscalVendaRepository;
+import adcsistemas.loja_comprebem.service.NotaFiscalCompraService;
 
 @RestController
 public class NotaFiscalCompraController {
 
 	@Autowired
 	private NotaFiscalCompraRepository notaFiscalCompraRepository;
+	
+	@Autowired
+	private NotaFiscalVendaRepository notaFiscalVendaRepository;
+	
+	@Autowired
+	private NotaFiscalCompraService notaFiscalCompraService;
+	
+	@ResponseBody
+	@PostMapping(value = "/relatorioProdutoCompNotaFiscal")
+	public ResponseEntity<List<RelatorioCompraNotaFiscalDTO>> relatorioProdutoCompNotaFiscal(@Valid @RequestBody RelatorioCompraNotaFiscalDTO relatorioCompraNotaFiscalDTO) {
+		
+		List<RelatorioCompraNotaFiscalDTO> retorno = 
+				new ArrayList<RelatorioCompraNotaFiscalDTO>();
+		
+		retorno = notaFiscalCompraService.gerarrelatorioProdutoCompNotaFiscal(relatorioCompraNotaFiscalDTO);
+		
+		return new ResponseEntity<List<RelatorioCompraNotaFiscalDTO>>(retorno, HttpStatus.OK);
+		
+	}
+	
+	
 	
 	@ResponseBody
 	@PostMapping(value = "/salvarNotaFiscalCompra")
@@ -101,6 +127,32 @@ public class NotaFiscalCompraController {
 		}
 
 		return new ResponseEntity<NotaFiscalCompra>(notaFiscalCompra, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaNotaFiscalVenda/{idVenda}")
+	public ResponseEntity<List<NotaFiscalVenda>> pesquisaNotaFiscalVenda(@PathVariable("idvenda") Long idvenda) throws ExceptionLojaComprebem {
+		
+		List<NotaFiscalVenda> notaFiscalCompra = notaFiscalVendaRepository.pesquisaPorVenda(idvenda);
+		
+		if(notaFiscalCompra == null) {
+			throw new ExceptionLojaComprebem("Não a nota fiscal para esta venda com código informado! : " + idvenda);
+		}
+		
+		return new ResponseEntity<List<NotaFiscalVenda>>(notaFiscalCompra, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaNotaVendaUnica/{idVenda}")
+	public ResponseEntity<NotaFiscalVenda> pesquisaNotaVendaUnica(@PathVariable("idvenda") Long idvenda) throws ExceptionLojaComprebem {
+		
+		NotaFiscalVenda notaFiscalCompra = notaFiscalVendaRepository.pesquisaNotaVendaUnica(idvenda);
+		
+		if(notaFiscalCompra == null) {
+			throw new ExceptionLojaComprebem("Não a nota fiscal para esta venda com código informado! : " + idvenda);
+		}
+		
+		return new ResponseEntity<NotaFiscalVenda>(notaFiscalCompra, HttpStatus.OK);
 	}
 	
 	@ResponseBody
