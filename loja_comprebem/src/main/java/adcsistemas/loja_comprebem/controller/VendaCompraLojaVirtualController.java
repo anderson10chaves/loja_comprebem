@@ -71,7 +71,7 @@ public class VendaCompraLojaVirtualController {
 	public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVendas(
 			@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionLojaComprebem, UnsupportedEncodingException, MessagingException {
 
-		vendaCompraLojaVirtual.getPessoaFisica().setPessoaJuridica(vendaCompraLojaVirtual.getPessoaJuridica());
+		vendaCompraLojaVirtual.getPessoaFisica().setEmpresa(vendaCompraLojaVirtual.getEmpresa());
 		PessoaFisica pessoaFisica = pessoaController.salvarPf(vendaCompraLojaVirtual.getPessoaFisica()).getBody();
 		vendaCompraLojaVirtual.setPessoaFisica(pessoaFisica);
 
@@ -83,14 +83,14 @@ public class VendaCompraLojaVirtualController {
 		Endereco enderecoEntrega = enderecoRepository.save(vendaCompraLojaVirtual.getEnderecoEntrega());
 		vendaCompraLojaVirtual.setEnderecoEntrega(enderecoEntrega);
 
-		vendaCompraLojaVirtual.getNotaFiscalVenda().setPessoaJuridica(vendaCompraLojaVirtual.getPessoaJuridica());
+		vendaCompraLojaVirtual.getNotaFiscalVenda().setEmpresa(vendaCompraLojaVirtual.getEmpresa());
 		/* Salva primeiro a venda e todos dados do cliente */
 		vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.saveAndFlush(vendaCompraLojaVirtual);
 
 		StatusRastreio statusRastreio = new StatusRastreio();
 		statusRastreio.setCentroDistruicao("Loja Local");
 		statusRastreio.setCidade("Local");
-		statusRastreio.setPessoaJuridica(vendaCompraLojaVirtual.getPessoaJuridica());
+		statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
 		statusRastreio.setEstado("Local");
 		statusRastreio.setStatus("Inicio Compra");
 		statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
@@ -99,7 +99,7 @@ public class VendaCompraLojaVirtualController {
 
 		for (int i = 0; i < vendaCompraLojaVirtual.getItemVendaLojas().size(); i++) {
 			vendaCompraLojaVirtual.getItemVendaLojas().get(i)
-					.setPessoaJuridica(vendaCompraLojaVirtual.getPessoaJuridica());
+					.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
 			vendaCompraLojaVirtual.getItemVendaLojas().get(i).setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
 		}
 
@@ -115,7 +115,7 @@ public class VendaCompraLojaVirtualController {
 		vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
 
 		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaFisica());
-		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaJuridica());
+		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getEmpresa());
 		
 		vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
 
@@ -143,7 +143,7 @@ public class VendaCompraLojaVirtualController {
 		contaReceber.setDescricao("Venda da Loja nº: " + vendaCompraLojaVirtual.getId());
 		contaReceber.setDtPagamento(Calendar.getInstance().getTime());
 		contaReceber.setDtVencimento(Calendar.getInstance().getTime());
-		contaReceber.setPessoaJuridica(vendaCompraLojaVirtual.getPessoaJuridica());
+		contaReceber.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
 		contaReceber.setPessoaFisica(vendaCompraLojaVirtual.getPessoaFisica());
 		contaReceber.setStatus(StatusContaReceber.QUITADO);
 		contaReceber.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
@@ -155,14 +155,14 @@ public class VendaCompraLojaVirtualController {
 		StringBuilder msgVendaEmail = new StringBuilder();
 		msgVendaEmail.append("Caro(a) Cliente, ").append(pessoaFisica.getNome()).append("</br>");
 		msgVendaEmail.append("Você realizou a compra nº: ").append(vendaCompraLojaVirtual.getId()).append("</br>");
-		msgVendaEmail.append("Na Loja ").append(vendaCompraLojaVirtual.getPessoaJuridica().getNomeFantasia());
+		msgVendaEmail.append("Na Loja ").append(vendaCompraLojaVirtual.getEmpresa().getNomeFantasia());
 		/*Assunto, msg, destino*/
 		sendEmailService.enviarEmailHtml("Compra realizada com sucesso", msgVendaEmail.toString(), pessoaFisica.getEmail());
 		
 		/*Email para vendedor*/
 		msgVendaEmail = new StringBuilder();
 		msgVendaEmail.append("Sua Loja realizou uma venda, nº: ").append(vendaCompraLojaVirtual.getId()).append("</br>");
-		sendEmailService.enviarEmailHtml("Venda finalizada!", msgVendaEmail.toString(), vendaCompraLojaVirtual.getPessoaJuridica().getEmail());
+		sendEmailService.enviarEmailHtml("Venda finalizada!", msgVendaEmail.toString(), vendaCompraLojaVirtual.getEmpresa().getEmail());
 		
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(vendaCompraLojaVirtualDTO, HttpStatus.OK);
 	}
@@ -183,7 +183,7 @@ public class VendaCompraLojaVirtualController {
 
 		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaFisica());
 
-		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoaJuridica());
+		vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getEmpresa());
 		
 		vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
 
@@ -232,7 +232,7 @@ public class VendaCompraLojaVirtualController {
 
 			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaFisica());
 
-			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaJuridica());
+			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getEmpresa());
 			vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtualSalvo.getValorTotal());
 
 			vendaCompraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtualSalvo.getEnderecoEntrega());
@@ -285,7 +285,7 @@ public class VendaCompraLojaVirtualController {
 
 			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaFisica());
 
-			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaJuridica());
+			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getEmpresa());
 			vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtualSalvo.getValorTotal());
 
 			vendaCompraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtualSalvo.getEnderecoEntrega());
@@ -337,7 +337,7 @@ public class VendaCompraLojaVirtualController {
 
 			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaFisica());
 
-			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaJuridica());
+			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getEmpresa());
 			vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtualSalvo.getValorTotal());
 
 			vendaCompraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtualSalvo.getEnderecoEntrega());
@@ -391,7 +391,7 @@ public class VendaCompraLojaVirtualController {
 
 			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaFisica());
 
-			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaJuridica());
+			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getEmpresa());
 			vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtualSalvo.getValorTotal());
 
 			vendaCompraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtualSalvo.getEnderecoEntrega());
@@ -461,7 +461,7 @@ public class VendaCompraLojaVirtualController {
 
 			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaFisica());
 
-			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getPessoaJuridica());
+			vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtualSalvo.getEmpresa());
 			vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtualSalvo.getValorTotal());
 
 			vendaCompraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtualSalvo.getEnderecoEntrega());

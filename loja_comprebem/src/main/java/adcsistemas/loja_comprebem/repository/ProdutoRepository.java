@@ -23,6 +23,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 	@Query("select a from Produto a where upper(trim(a.nome)) like %?1%")
 	List<Produto> pesquisaProdutoPorNome(String nome);
 	
-	@Query("select a from Produto a where upper(trim(a.nome)) like %?1% and a.pessoaJuridica.id = ?2")
+	@Query("select a from Produto a where upper(trim(a.nome)) like %?1% and a.empresa.id = ?2")
 	List<Produto> pesquisaProdutoNomeEmpresa(String nome, Long idEmpresa);
 }

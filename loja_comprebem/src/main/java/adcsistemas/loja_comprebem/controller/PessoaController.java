@@ -18,12 +18,12 @@ import adcsistemas.loja_comprebem.enums.TipoPessoa;
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.Endereco;
 import adcsistemas.loja_comprebem.model.PessoaFisica;
-import adcsistemas.loja_comprebem.model.PessoaJuridica;
+import adcsistemas.loja_comprebem.model.Empresa;
 import adcsistemas.loja_comprebem.model.dto.CepDTO;
 import adcsistemas.loja_comprebem.model.dto.ConsultaCnpjDTO;
 import adcsistemas.loja_comprebem.repository.EnderecoRepository;
 import adcsistemas.loja_comprebem.repository.PessoaFisicaRepository;
-import adcsistemas.loja_comprebem.repository.PessoaRepository;
+import adcsistemas.loja_comprebem.repository.EmpresaRepository;
 import adcsistemas.loja_comprebem.service.PessoaUserService;
 import adcsistemas.loja_comprebem.service.ServiceContagemAcessoApi;
 import adcsistemas.loja_comprebem.utils.ValidaCnpj;
@@ -33,7 +33,7 @@ import adcsistemas.loja_comprebem.utils.ValidaCpf;
 public class PessoaController {
 
 	@Autowired
-	private PessoaRepository pessoaRepository;
+	private EmpresaRepository pessoaRepository;
 
 	@Autowired
 	private PessoaFisicaRepository pessoaFisicaRepository;
@@ -49,122 +49,122 @@ public class PessoaController {
 
 	@ResponseBody
 	@GetMapping(value = "/pesquisaPorNomePJ/{nome}")
-	public ResponseEntity<List<PessoaJuridica>> pesquisaPorNomePJ(@PathVariable("nome") String nome) {
+	public ResponseEntity<List<Empresa>> pesquisaPorNomePJ(@PathVariable("nome") String nome) {
 
-		List<PessoaJuridica> juridicas = pessoaRepository.pesquisaPorNomePJ(nome.trim().toUpperCase());
+		List<Empresa> empresas = pessoaRepository.pesquisaPorNomePJ(nome.trim().toUpperCase());
 		
 		serviceContagemAcessoApi.atualizaAcessoEndPoint();
 		
-		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
 		
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/consultasNomeFastasia/{nomeFantasia}")
-	public ResponseEntity<PessoaJuridica> existeNomeFantasia(@PathVariable("nomeFantasia") String nomeFantasia) {
+	public ResponseEntity<Empresa> existeNomeFantasia(@PathVariable("nomeFantasia") String nomeFantasia) {
 
-		PessoaJuridica pessoaJuridica = pessoaRepository.existeNomeFantasia(nomeFantasia.trim().toUpperCase());
+		Empresa empresa = pessoaRepository.existeNomeFantasia(nomeFantasia.trim().toUpperCase());
 
-		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresa, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/pesquisaNomeFastasia/{nomeFastasia}")
-	public ResponseEntity<List<PessoaJuridica>> existeNomeFantasialList(@PathVariable("nomeFastasia") String nomeFastasia) {
+	public ResponseEntity<List<Empresa>> existeNomeFantasialList(@PathVariable("nomeFastasia") String nomeFastasia) {
 
-		List<PessoaJuridica> juridicas = pessoaRepository.existeNomeFantasiaList(nomeFastasia.trim().toUpperCase());
+		List<Empresa> empresas = pessoaRepository.existeNomeFantasiaList(nomeFastasia.trim().toUpperCase());
 
-		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/consultasCategoria/{categoria}")
-	public ResponseEntity<PessoaJuridica> existeCategoria(@PathVariable("categoria") String categoria) {
+	public ResponseEntity<Empresa> existeCategoria(@PathVariable("categoria") String categoria) {
 
-		PessoaJuridica pessoaJuridica = pessoaRepository.existeCategoria(categoria.trim().toUpperCase());
+		Empresa empresas = pessoaRepository.existeCategoria(categoria.trim().toUpperCase());
 
-		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/pesquisaCategoria/{categoria}")
-	public ResponseEntity<List<PessoaJuridica>> existeCategoriaList(@PathVariable("categoria") String categoria) {
+	public ResponseEntity<List<Empresa>> existeCategoriaList(@PathVariable("categoria") String categoria) {
 
-		List<PessoaJuridica> juridicas = pessoaRepository.existeCategoriaList(categoria.trim().toUpperCase());
+		List<Empresa> empresas = pessoaRepository.existeCategoriaList(categoria.trim().toUpperCase());
 
-		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/consultasRazaoSocial/{razaoSocial}")
-	public ResponseEntity<PessoaJuridica> existeRazaoSocial(@PathVariable("razaoSocial") String razaoSocial) {
+	public ResponseEntity<Empresa> existeRazaoSocial(@PathVariable("razaoSocial") String razaoSocial) {
 
-		PessoaJuridica pessoaJuridica = pessoaRepository.existeinscMunicipal(razaoSocial.trim().toUpperCase());
+		Empresa empresas = pessoaRepository.existeinscMunicipal(razaoSocial.trim().toUpperCase());
 
-		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/pesquisainscMunicipal/{razaoSocial}")
-	public ResponseEntity<List<PessoaJuridica>> existeRazaoSocialList(@PathVariable("razaoSocial") String razaoSocial) {
+	public ResponseEntity<List<Empresa>> existeRazaoSocialList(@PathVariable("razaoSocial") String razaoSocial) {
 
-		List<PessoaJuridica> juridicas = pessoaRepository.existeRazaoSocialList(razaoSocial.trim().toUpperCase());
+		List<Empresa> empresas = pessoaRepository.existeRazaoSocialList(razaoSocial.trim().toUpperCase());
 
-		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/consultasinscMunicipal/{inscMunicipal}")
-	public ResponseEntity<PessoaJuridica> existeinscMunicipal(@PathVariable("inscMunicipal") String inscMunicipal) {
+	public ResponseEntity<Empresa> existeinscMunicipal(@PathVariable("inscMunicipal") String inscMunicipal) {
 
-		PessoaJuridica pessoaJuridica = pessoaRepository.existeinscMunicipal(inscMunicipal.trim().toUpperCase());
+		Empresa empresas = pessoaRepository.existeinscMunicipal(inscMunicipal.trim().toUpperCase());
 
-		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/pesquisainscMunicipal/{inscMunicipal}")
-	public ResponseEntity<List<PessoaJuridica>> existeinscMunicipallList(@PathVariable("inscMunicipal") String inscMunicipal) {
+	public ResponseEntity<List<Empresa>> existeinscMunicipallList(@PathVariable("inscMunicipal") String inscMunicipal) {
 
-		List<PessoaJuridica> juridicas = pessoaRepository.existeinscMunicipallList(inscMunicipal);
+		List<Empresa> empresas = pessoaRepository.existeinscMunicipallList(inscMunicipal);
 
-		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/consultasCnpj/{cnpj}")
-	public ResponseEntity<PessoaJuridica> existeCnpj(@PathVariable("cnpj") String cnpj) {
+	public ResponseEntity<Empresa> existeCnpj(@PathVariable("cnpj") String cnpj) {
 
-		PessoaJuridica pessoaJuridica = pessoaRepository.existeCnpj(cnpj);
+		Empresa empresas = pessoaRepository.existeCnpj(cnpj);
 
-		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/pesquisaCnpj/{cnpj}")
-	public ResponseEntity<List<PessoaJuridica>> existeCnpjList(@PathVariable("cnpj") String cnpj) {
+	public ResponseEntity<List<Empresa>> existeCnpjList(@PathVariable("cnpj") String cnpj) {
 
-		List<PessoaJuridica> juridicas = pessoaRepository.existeCnpjList(cnpj);
+		List<Empresa> empresas = pessoaRepository.existeCnpjList(cnpj);
 
-		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/consultasInscEstadual/{inscEstadual}")
-	public ResponseEntity<PessoaJuridica> existeinscEstadual(@PathVariable("inscEstadual") String inscEstadual) {
+	public ResponseEntity<Empresa> existeinscEstadual(@PathVariable("inscEstadual") String inscEstadual) {
 
-		PessoaJuridica pessoaJuridica = pessoaRepository.existeinscEstadual(inscEstadual);
+		Empresa empresas = pessoaRepository.existeinscEstadual(inscEstadual);
 
-		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@GetMapping(value = "/pesquisaInscEstadual/{inscEstadual}")
-	public ResponseEntity<List<PessoaJuridica>> existeinscEstadualList(@PathVariable("inscEstadual") String inscEstadual) {
+	public ResponseEntity<List<Empresa>> existeinscEstadualList(@PathVariable("inscEstadual") String inscEstadual) {
 
-		List<PessoaJuridica> juridicas = pessoaRepository.existeinscEstadualList(inscEstadual);
+		List<Empresa> empresas = pessoaRepository.existeinscEstadualList(inscEstadual);
 
-		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
 	}
 	
 	@ResponseBody
@@ -217,65 +217,65 @@ public class PessoaController {
 	}
 
 	@ResponseBody
-	@PostMapping(value = "/salvarPj")
-	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica)
+	@PostMapping(value = "/salvarEmpresa")
+	public ResponseEntity<Empresa> salvarEmpresa(@RequestBody @Valid Empresa empresa)
 			throws ExceptionLojaComprebem {
 
-		if (pessoaJuridica == null) {
-			throw new ExceptionLojaComprebem("Pessoa Juridica não pode ser nulo!");
+		if (empresa == null) {
+			throw new ExceptionLojaComprebem("A empresa não pode ser nulo!");
 		}
 		
-		if (pessoaJuridica.getTipoPessoa() == null) {
-			throw new ExceptionLojaComprebem("Informe o tipo Jurídico ou Fornecedor");
+		if (empresa.getTipoPessoa() == null) {
+			throw new ExceptionLojaComprebem("Informe o tipo Empresa ou Fornecedor");
 		}
 
-		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpj(pessoaJuridica.getCnpj()) != null) {
-			throw new ExceptionLojaComprebem("Já existe CNPJ com esse codigo: " + pessoaJuridica.getCnpj());
+		if (empresa.getId() == null && pessoaRepository.existeCnpj(empresa.getCnpj()) != null) {
+			throw new ExceptionLojaComprebem("Já existe CNPJ com esse codigo: " + empresa.getCnpj());
 		}
 
-		if (pessoaJuridica.getId() == null
-				&& pessoaRepository.existeinscEstadual(pessoaJuridica.getInscEstadual()) != null) {
+		if (empresa.getId() == null
+				&& pessoaRepository.existeinscEstadual(empresa.getInscEstadual()) != null) {
 			throw new ExceptionLojaComprebem(
-					"Já existe Inscrição Estadual com esse codigo: " + pessoaJuridica.getInscEstadual());
+					"Já existe Inscrição Estadual com esse codigo: " + empresa.getInscEstadual());
 		}
 
-		if (!ValidaCnpj.isCNPJ(pessoaJuridica.getCnpj())) {
-			throw new ExceptionLojaComprebem("Cnpj : " + pessoaJuridica.getCnpj() + "é inválido!.");
+		if (!ValidaCnpj.isCNPJ(empresa.getCnpj())) {
+			throw new ExceptionLojaComprebem("Cnpj : " + empresa.getCnpj() + "é inválido!.");
 		}
 
-		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
+		if (empresa.getId() == null || empresa.getId() <= 0) {
 
-			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
+			for (int p = 0; p < empresa.getEnderecos().size(); p++) {
 
-				CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+				CepDTO cepDTO = pessoaUserService.consultaCep(empresa.getEnderecos().get(p).getCep());
 
-				pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
-				pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
-				pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
-				pessoaJuridica.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
-				pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+				empresa.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+				empresa.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+				empresa.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+				empresa.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
+				empresa.getEnderecos().get(p).setUf(cepDTO.getUf());
 
 			}
 		} else {
-			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
-				Endereco enderecoTemp = enderecoRepository.findById(pessoaJuridica.getEnderecos().get(p).getId()).get();
+			for (int p = 0; p < empresa.getEnderecos().size(); p++) {
+				Endereco enderecoTemp = enderecoRepository.findById(empresa.getEnderecos().get(p).getId()).get();
 
-				if (!enderecoTemp.getCep().equals(pessoaJuridica.getEnderecos().get(p).getCep())) {
+				if (!enderecoTemp.getCep().equals(empresa.getEnderecos().get(p).getCep())) {
 
-					CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+					CepDTO cepDTO = pessoaUserService.consultaCep(empresa.getEnderecos().get(p).getCep());
 
-					pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
-					pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
-					pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
-					pessoaJuridica.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
-					pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+					empresa.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+					empresa.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+					empresa.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+					empresa.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
+					empresa.getEnderecos().get(p).setUf(cepDTO.getUf());
 				}
 			}
 		}
 
-		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
+		empresa = pessoaUserService.salvarEmpresa(empresa);
 
-		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
+		return new ResponseEntity<Empresa>(empresa, HttpStatus.OK);
 	}
 
 	@ResponseBody

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.AvaliacaoProduto;
+import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.model.dto.AvaliacaoProdutoDTO;
 import adcsistemas.loja_comprebem.repository.AvaliacaoProdutoRepository;
 
@@ -31,7 +32,7 @@ public class AvaliacaoProdutoController {
 	@PostMapping(value = "/salvarAvaliacaoProduto")
 	public ResponseEntity<AvaliacaoProduto> salvarAvaliacaoProduto(@RequestBody @Valid AvaliacaoProduto avaliacaoProduto) throws ExceptionLojaComprebem {
 		
-		if(avaliacaoProduto.getPessoaJuridica() == null || (avaliacaoProduto.getPessoaJuridica() != null && avaliacaoProduto.getPessoaJuridica().getId() < 0)) {
+		if(avaliacaoProduto.getEmpresa() == null || (avaliacaoProduto.getEmpresa() != null && avaliacaoProduto.getEmpresa().getId() < 0)) {
 			throw new ExceptionLojaComprebem("Informe a Empresa");
 		}
 		
@@ -39,9 +40,10 @@ public class AvaliacaoProdutoController {
 			throw new ExceptionLojaComprebem("Informe o Produto");
 		}
 		
-		if(avaliacaoProduto.getPessoa() == null || (avaliacaoProduto.getPessoa() != null && avaliacaoProduto.getPessoa().getId() < 0)) {
+		if(avaliacaoProduto.getPessoafisica() == null || (avaliacaoProduto.getPessoafisica() != null && avaliacaoProduto.getPessoafisica().getId() < 0)) {
 			throw new ExceptionLojaComprebem("Informe a Pessoa");
 		}
+	
 		
 		AvaliacaoProduto avaliacaoProdutoSalvo = avaliacaoProdutoRepository.save(avaliacaoProduto);
 		
@@ -78,8 +80,8 @@ public class AvaliacaoProdutoController {
 		  avaliacaoProdutoDTO.setId(avaliacaoProduto.getId());
 		  avaliacaoProdutoDTO.setDescricao(avaliacaoProduto.getDescricao());
 		  avaliacaoProdutoDTO.setNota(avaliacaoProduto.getNota());
-		  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoa().getId());
-		  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getPessoaJuridica().getId());
+		  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoafisica().getId());
+		  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getEmpresa().getId());
 		  avaliacaoProdutoDTO.setProduto(avaliacaoProduto.getProduto().getId());
 		 
 		  dtos.add(avaliacaoProdutoDTO);
@@ -103,8 +105,8 @@ public class AvaliacaoProdutoController {
 			  avaliacaoProdutoDTO.setId(avaliacaoProduto.getId());
 			  avaliacaoProdutoDTO.setDescricao(avaliacaoProduto.getDescricao());
 			  avaliacaoProdutoDTO.setNota(avaliacaoProduto.getNota());
-			  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoa().getId());
-			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getPessoaJuridica().getId());
+			  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoafisica().getId());
+			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getEmpresa().getId());
 			  avaliacaoProdutoDTO.setProduto(avaliacaoProduto.getProduto().getId());
 			  
 			  dtos.add(avaliacaoProdutoDTO);
@@ -127,8 +129,8 @@ public class AvaliacaoProdutoController {
 			  avaliacaoProdutoDTO.setId(avaliacaoProduto.getId());
 			  avaliacaoProdutoDTO.setDescricao(avaliacaoProduto.getDescricao());
 			  avaliacaoProdutoDTO.setNota(avaliacaoProduto.getNota());
-			  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoa().getId());
-			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getPessoaJuridica().getId());
+			  avaliacaoProdutoDTO.setPessoa(avaliacaoProduto.getPessoafisica().getId());
+			  avaliacaoProdutoDTO.setEmpresa(avaliacaoProduto.getEmpresa().getId());
 			  avaliacaoProdutoDTO.setProduto(avaliacaoProduto.getProduto().getId());
 			  
 			  dtos.add(avaliacaoProdutoDTO);

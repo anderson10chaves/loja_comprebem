@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
+import adcsistemas.loja_comprebem.model.Empresa;
 import adcsistemas.loja_comprebem.model.MarcaProduto;
+import adcsistemas.loja_comprebem.repository.EmpresaRepository;
 import adcsistemas.loja_comprebem.repository.MarcaProdutoRepository;
 
 @RestController
@@ -24,6 +26,7 @@ public class MarcaProdutoController {
 
 	@Autowired
 	private MarcaProdutoRepository marcaProdutoRepository;
+	
 
 	@ResponseBody
 	@PostMapping(value = "/salvarMarcaProduto")
@@ -36,7 +39,8 @@ public class MarcaProdutoController {
 				throw new ExceptionLojaComprebem("Marca Produto já existe com essa descrição: " + marcaProduto.getNomeDesc());
 			}
 		}
-
+		
+		
 		MarcaProduto marcaProdutoSalvo = marcaProdutoRepository.save(marcaProduto);
 
 		return new ResponseEntity<MarcaProduto>(marcaProdutoSalvo, HttpStatus.OK);

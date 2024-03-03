@@ -49,12 +49,12 @@ public class ProdutoController {
 			throw new ExceptionLojaComprebem("Nome do Produto deve contér no minimo 10 caracteres");
 		}
 		
-		if(produto.getPessoaJuridica() == null || produto.getPessoaJuridica().getId() <= 0) {
+		if(produto.getEmpresa() == null || produto.getEmpresa().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Empresa deve ser informada");
 		}
 		
 		if (produto.getId() == null) {
-			List<Produto> produtos = produtoRepository.pesquisaProdutoNomeEmpresa(produto.getNome().toUpperCase(), produto.getPessoaJuridica().getId());
+			List<Produto> produtos = produtoRepository.pesquisaProdutoNomeEmpresa(produto.getNome().toUpperCase(), produto.getEmpresa().getId());
 			
 			if (!produtos.isEmpty()) {
 				throw new ExceptionLojaComprebem("Produto já existe com essa descrição: " + produto.getNome());
@@ -85,7 +85,7 @@ public class ProdutoController {
 			
 			for(int x = 0; x < produto.getImagens().size(); x++) {
 				produto.getImagens().get(x).setProduto(produto);
-				produto.getImagens().get(x).setPessoaJuridica(produto.getPessoaJuridica());
+				produto.getImagens().get(x).setEmpresa(produto.getEmpresa());
 				
 				String base64Image = "";
 				
@@ -135,8 +135,8 @@ public class ProdutoController {
 				.append(" estoque esta baixo: " + produto.getQtdEstoque());
 			html.append("<p> Id Produto..: ").append(produto.getId()).append("</p>");
 			
-			if(produto.getPessoaJuridica().getEmail() != null) {
-				sendEmailService.enviarEmailHtml("Produto sem estoque", html.toString(), produto.getPessoaJuridica().getEmail());
+			if(produto.getEmpresa().getEmail() != null) {
+				sendEmailService.enviarEmailHtml("Produto sem estoque", html.toString(), produto.getEmpresa().getEmail());
 			}
 			
 			

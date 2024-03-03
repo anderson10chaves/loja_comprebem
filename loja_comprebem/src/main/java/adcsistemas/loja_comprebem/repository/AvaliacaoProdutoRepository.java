@@ -17,10 +17,10 @@ public interface AvaliacaoProdutoRepository extends JpaRepository<AvaliacaoProdu
 	@Query(value = "select a from AvaliacaoProduto a where a.produto.id = ?1")
 	List<AvaliacaoProduto> pesquisaAvaliacaoProdutoId(Long idProduto);
 	
-	@Query(value = "select a from AvaliacaoProduto a where a.produto.id = ?1 and a.pessoa.id = ?2")
+	@Query(value = "select a from AvaliacaoProduto a where a.produto.id = ?1 and a.pessoafisica.id = ?2")
 	List<AvaliacaoProduto> pesquisaAvaliacaoProdutoPessoa(Long idProduto, Long idPessoa);
 	
-	@Query(value ="select a from AvaliacaoProduto a where a.pessoa.id = ?1")
+	@Query(value ="select a from AvaliacaoProduto a where a.pessoafisica.id = ?1")
 	List<AvaliacaoProduto> pesquisaAvaliacaoPessoa(Long idPessoa);
 
 	@Transactional

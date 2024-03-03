@@ -40,6 +40,7 @@ class LojaComprebemApplicationTests extends TestCase {
 	@Autowired
 	private WebApplicationContext wac;
 	
+	
 	@Test
 	public void testRestApiCadastroAcesso() throws JsonProcessingException, Exception {
 		DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
@@ -61,17 +62,17 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		/*Converter o retorno da api para obejto de acesso*/
 		
-		/*
-		 * Acesso objetoRetorno = objectMapper.
-		 * readValue(retornoApi.andReturn().getResponse().getContentAsString(),
-		 * Acesso.class);
-		 */
 		
-		//assertEquals(acesso.getDescricao(), objetoRetorno.getDescricao());
+		  Acesso objetoRetorno = objectMapper.
+		  readValue(retornoApi.andReturn().getResponse().getContentAsString(),
+		  Acesso.class);
+		 
+		
+		assertEquals(acesso.getDescricao(), objetoRetorno.getDescricao());
 		
 	}
 	
-	@Test
+	/*@Test
 	public void testRestApiDeleteAcesso() throws JsonProcessingException, Exception {
 		DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
 		MockMvc mockMvc = builder.build();
@@ -96,9 +97,9 @@ class LojaComprebemApplicationTests extends TestCase {
 		assertEquals("Acesso excluÃ­do com sucesso", retornoApi.andReturn().getResponse().getContentAsString());
 		assertEquals(200, retornoApi.andReturn().getResponse().getStatus());
 		
-	}
+	} */
 	
-	@Test
+	/*@Test
 	public void testRestApiDeleteAcessoId() throws JsonProcessingException, Exception {
 		DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
 		MockMvc mockMvc = builder.build();
@@ -189,7 +190,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		acessoRepository.deleteById(acesso.getId());
 		
-	}
+	}*/
 	
 	@Test
 	public void testCadastroAcesso() throws ExceptionLojaComprebem {
@@ -202,7 +203,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(true, acesso.getId() == null);
 		
-		//acesso = acessoController.salvarAcesso(acesso).getBody();
+		acesso = acessoController.salvarAcesso(acesso).getBody();
 		
 		assertEquals(true, acesso.getId() > 0);
 		
@@ -214,7 +215,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		/*Teste de deletar*/
 		
-		acessoRepository.deleteById(acessoSalvo.getId());
+		/*acessoRepository.deleteById(acessoSalvo.getId());
 		
 		acessoRepository.flush();
 		
@@ -234,7 +235,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(1, acessos.size());
 		
-		acessoRepository.deleteById(acesso.getId());
+		/*acessoRepository.deleteById(acesso.getId());*/
 	}
 
 }

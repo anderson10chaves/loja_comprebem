@@ -80,9 +80,9 @@ public class Produto implements Serializable {
 	private Boolean ativo = Boolean.TRUE;
 
 	@NotNull(message = "A empresa responsável pelo Produto é Obrigatório")
-	@ManyToOne(targetEntity = PessoaJuridica.class)
+	@ManyToOne(targetEntity = Empresa.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private PessoaJuridica pessoaJuridica;
+	private Empresa empresa;
 	
 	@NotNull(message = "A Categoria do Produto é Obrigatório")
 	@ManyToOne(targetEntity = CategoriaProduto.class)
@@ -217,12 +217,12 @@ public class Produto implements Serializable {
 		this.ativo = ativo;
 	}
 
-	public PessoaJuridica getPessoaJuridica() {
-		return pessoaJuridica;
+	public Empresa getEmpresa() {
+		return empresa;
 	}
 
-	public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
-		this.pessoaJuridica = pessoaJuridica;
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 
 	public CategoriaProduto getCategoriaProduto() {

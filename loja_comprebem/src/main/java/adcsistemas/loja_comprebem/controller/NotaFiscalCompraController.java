@@ -20,6 +20,7 @@ import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.NotaFiscalCompra;
 import adcsistemas.loja_comprebem.model.NotaFiscalVenda;
 import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioCompraNotaFiscalDTO;
+import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioProdutoAlertaEstoqueDTO;
 import adcsistemas.loja_comprebem.repository.NotaFiscalCompraRepository;
 import adcsistemas.loja_comprebem.repository.NotaFiscalVendaRepository;
 import adcsistemas.loja_comprebem.service.NotaFiscalCompraService;
@@ -49,6 +50,20 @@ public class NotaFiscalCompraController {
 		
 	}
 	
+	@ResponseBody
+	@PostMapping(value = "/relatorioProdutoAlertaEstoque")
+	public ResponseEntity<List<RelatorioProdutoAlertaEstoqueDTO>> relatorioProdutoAlertaEstoque(@Valid @RequestBody RelatorioProdutoAlertaEstoqueDTO relatorioProdutoAlertaEstoqueDTO) {
+		
+		List<RelatorioProdutoAlertaEstoqueDTO> retorno = 
+				new ArrayList<RelatorioProdutoAlertaEstoqueDTO>();
+		
+		retorno = notaFiscalCompraService.gerarRelatorioAlertaEstoque(relatorioProdutoAlertaEstoqueDTO);
+		
+		return new ResponseEntity<List<RelatorioProdutoAlertaEstoqueDTO>>(retorno, HttpStatus.OK);
+		
+	}
+	
+	
 	
 	
 	@ResponseBody
@@ -75,7 +90,7 @@ public class NotaFiscalCompraController {
 			throw new ExceptionLojaComprebem("A Pessoa Jurídica referente a Nota Fiscal de Compra deve ser Informada");
 		}
 		
-		if(notaFiscalCompra.getPessoaJuridica() == null || notaFiscalCompra.getPessoaJuridica().getId() <= 0) {
+		if(notaFiscalCompra.getEmpresa() == null || notaFiscalCompra.getEmpresa().getId() <= 0) {
 			throw new ExceptionLojaComprebem("A Empresa referente a Nota Fiscal de Compra deve ser Informada");
 		}
 		

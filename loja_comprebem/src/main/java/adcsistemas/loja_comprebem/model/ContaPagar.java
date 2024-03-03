@@ -67,15 +67,15 @@ public class ContaPagar implements Serializable {
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
 	private PessoaFisica pessoaFisica;
 	
-	@ManyToOne(targetEntity = PessoaJuridica.class)
+	@ManyToOne(targetEntity = Empresa.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private PessoaJuridica pessoaJuridica;
+	private Empresa empresa;
 	
-	@ManyToOne(targetEntity = PessoaJuridica.class)
+	@ManyToOne(targetEntity = Empresa.class)
 	@JoinColumn(name = "pessoa_fornecedor_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fornecedor_fk"))
-	private PessoaJuridica pessoa_fornecedor;
+	private Empresa pessoa_fornecedor;
 	
 	public Long getId() {
 		return id;
@@ -141,19 +141,19 @@ public class ContaPagar implements Serializable {
 		this.pessoaFisica = pessoaFisica;
 	}
 
-	public PessoaJuridica getPessoaJuridica() {
-		return pessoaJuridica;
+	public Empresa getEmpresa() {
+		return empresa;
 	}
 
-	public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
-		this.pessoaJuridica = pessoaJuridica;
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 
-	public PessoaJuridica getPessoa_fornecedor() {
+	public Empresa getPessoa_fornecedor() {
 		return pessoa_fornecedor;
 	}
 
-	public void setPessoa_fornecedor(PessoaJuridica pessoa_fornecedor) {
+	public void setPessoa_fornecedor(Empresa pessoa_fornecedor) {
 		this.pessoa_fornecedor = pessoa_fornecedor;
 	}
 

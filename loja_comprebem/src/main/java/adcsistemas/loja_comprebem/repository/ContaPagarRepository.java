@@ -22,7 +22,7 @@ public interface ContaPagarRepository extends JpaRepository<ContaPagar, Long> {
 	@Query("select a from ContaPagar a where a.pessoa_fornecedor.id = ?1")
 	List<ContaPagar> pesquisaContaPagarPessoaFornecedor(Long idPessoaFornecedor);
 	
-	@Query("select a from ContaPagar a where a.pessoaJuridica.id = ?1")
+	@Query("select a from ContaPagar a where a.empresa.id = ?1")
 	List<ContaPagar> pesquisaContaPagarEmpresa(Long idEmpresa);
 
 }

@@ -11,6 +11,6 @@ INSERT INTO public.tabela_acesso_endpoint(
 
     INSERT INTO public.tabela_acesso_endpoint(
             nome_endpoint, qtd_acesso_endpoint)
-    VALUES ('END_POINT_PESSOA_JURIDICA', 0);
+    VALUES ('END_POINT_EMPRESA', 0);
     
 alter table tabela_acesso_endpoint add constraint nome_end_point_unique UNIQUE (nome_endpoint)

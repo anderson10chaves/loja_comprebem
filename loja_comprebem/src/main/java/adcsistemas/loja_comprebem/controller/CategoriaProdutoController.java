@@ -29,7 +29,7 @@ public class CategoriaProdutoController {
 	@PostMapping(value = "/categoriaProdutoSalvar")
 	public ResponseEntity<CategoriaProduto> salvarCategoriaProduto(@RequestBody @Valid  CategoriaProduto categoriaProduto) throws ExceptionLojaComprebem {
 		
-		if (categoriaProduto.getPessoaJuridica() == null || categoriaProduto.getPessoaJuridica().getId() == null) {
+		if (categoriaProduto.getEmpresa() == null || categoriaProduto.getEmpresa().getId() == null) {
 			throw new ExceptionLojaComprebem("A empresa é obrigatório");
 		}
 		

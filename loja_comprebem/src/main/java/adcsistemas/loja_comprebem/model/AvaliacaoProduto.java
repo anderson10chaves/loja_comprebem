@@ -39,15 +39,15 @@ public class AvaliacaoProduto implements Serializable {
 	@Column(nullable = false)
 	private Integer nota;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@ManyToOne(targetEntity = PessoaFisica.class)
 	@JoinColumn(name = "pessoa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-	private Pessoa pessoa;
+	private PessoaFisica pessoafisica;
 	
-	@ManyToOne(targetEntity = PessoaJuridica.class)
+	@ManyToOne(targetEntity = Empresa.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
-	private PessoaJuridica pessoaJuridica;
+	private Empresa empresa;
 	
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false,
@@ -76,23 +76,22 @@ public class AvaliacaoProduto implements Serializable {
 
 	public void setNota(Integer nota) {
 		this.nota = nota;
+	}	
+
+	public PessoaFisica getPessoafisica() {
+		return pessoafisica;
 	}
 
-
-	public Pessoa getPessoa() {
-		return pessoa;
+	public void setPessoafisica(PessoaFisica pessoafisica) {
+		this.pessoafisica = pessoafisica;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public Empresa getEmpresa() {
+		return empresa;
 	}
 
-	public PessoaJuridica getPessoaJuridica() {
-		return pessoaJuridica;
-	}
-
-	public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
-		this.pessoaJuridica = pessoaJuridica;
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 
 	public Produto getProduto() {

@@ -2,7 +2,7 @@ package adcsistemas.loja_comprebem.enums;
 
 public enum TipoPessoa {
 
-	JURIDICA("Juridica"),
+	Empresa("Empresa"),
 	JURIDICA_FORNECEDOR("Juridica_Fornecedor"),
 	FISICA("Fisica");
 
