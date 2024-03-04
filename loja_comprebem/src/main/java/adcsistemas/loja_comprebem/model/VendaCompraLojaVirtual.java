@@ -11,6 +11,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -28,6 +30,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import adcsistemas.loja_comprebem.enums.StatusVendaLojaVirtual;
 
 @Entity
 @Table(name = "vd_cp_loja_virt")
@@ -99,18 +103,23 @@ public class VendaCompraLojaVirtual implements Serializable {
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
 	private Empresa empresa;
 	
+	@Column(nullable = false)
+	@NotNull(message = "Status da venda é Obrigatório")
+	@Enumerated(EnumType.STRING)
+	private StatusVendaLojaVirtual statusVendaLojaVirtual;
+	
 	@OneToMany(mappedBy = "vendaCompraLojaVirtual", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();
 	
 	
-	private Boolean ativo = Boolean.FALSE;
+	private Boolean excluido = Boolean.FALSE;
 	
-	public Boolean getAtivo() {
-		return ativo;
+	public Boolean getExcluido() {
+		return excluido;
 	}
 	
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
+	public void setExcluido(Boolean excluido) {
+		this.excluido = excluido;
 	}
 
 	public Long getId() {
@@ -223,6 +232,14 @@ public class VendaCompraLojaVirtual implements Serializable {
 
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
+	}
+
+	public StatusVendaLojaVirtual getStatusVendaLojaVirtual() {
+		return statusVendaLojaVirtual;
+	}
+
+	public void setStatusVendaLojaVirtual(StatusVendaLojaVirtual statusVendaLojaVirtual) {
+		this.statusVendaLojaVirtual = statusVendaLojaVirtual;
 	}
 
 	public List<ItemVendaLoja> getItemVendaLojas() {

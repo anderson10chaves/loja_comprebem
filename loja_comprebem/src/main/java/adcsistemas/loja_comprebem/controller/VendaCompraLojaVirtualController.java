@@ -171,7 +171,7 @@ public class VendaCompraLojaVirtualController {
 	@GetMapping(value = "/pesquisaVendaId/{id}")
 	public ResponseEntity<VendaCompraLojaVirtualDTO> pesquisaVendaId(@PathVariable("id") Long idVenda) {
 
-		VendaCompraLojaVirtual vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.findByIdAtivo(idVenda);
+		VendaCompraLojaVirtual vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.findByIdExcluido(idVenda);
 
 		if (vendaCompraLojaVirtual == null) {
 			vendaCompraLojaVirtual = new VendaCompraLojaVirtual();
@@ -269,7 +269,7 @@ public class VendaCompraLojaVirtualController {
 			@PathVariable("id") Long idProduto) {
 
 		List<VendaCompraLojaVirtual> vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository
-				.vendaPorProdutoAtivo(idProduto);
+				.vendaPorProdutoInativo(idProduto);
 
 		if (vendaCompraLojaVirtual == null) {
 			vendaCompraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
@@ -321,7 +321,7 @@ public class VendaCompraLojaVirtualController {
 			@PathVariable("id") Long idProduto) {
 
 		List<VendaCompraLojaVirtual> vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository
-				.vendaPorProdutoInativo(idProduto);
+				.vendaPorProdutoAtivo(idProduto);
 
 		if (vendaCompraLojaVirtual == null) {
 			vendaCompraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();

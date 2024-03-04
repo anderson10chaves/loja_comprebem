@@ -63,6 +63,11 @@ public class NotaFiscalCompraService {
 		return retorno;
 	}
 	
+	/**
+	 * Este relatorio consulta alerta em estoque se estiver baixo do estoque principal
+	 * @param relatorioProdutoAlertaEstoqueDTO
+	 * @return RelatorioProdutoAlertaEstoqueDTO
+	 */
 	public List<RelatorioProdutoAlertaEstoqueDTO> gerarRelatorioAlertaEstoque(RelatorioProdutoAlertaEstoqueDTO alertaEstoque) {
 		
 		List<RelatorioProdutoAlertaEstoqueDTO> retorno = new ArrayList<RelatorioProdutoAlertaEstoqueDTO>();

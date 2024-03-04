@@ -54,6 +54,9 @@ public class NotaFiscalCompraController {
 	@PostMapping(value = "/relatorioProdutoAlertaEstoque")
 	public ResponseEntity<List<RelatorioProdutoAlertaEstoqueDTO>> relatorioProdutoAlertaEstoque(@Valid @RequestBody RelatorioProdutoAlertaEstoqueDTO relatorioProdutoAlertaEstoqueDTO) {
 		
+		
+		// criar schedule para envio de email automaticos por data.
+		
 		List<RelatorioProdutoAlertaEstoqueDTO> retorno = 
 				new ArrayList<RelatorioProdutoAlertaEstoqueDTO>();
 		
