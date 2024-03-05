@@ -1,0 +1,173 @@
+/*JSON COMPRA FRETE*/
+
+{
+	"orders": [
+		"9b7da83d-75e9-4316-ac7f-b31eb8c029c8"
+	]
+}
+
+
+/*Retorno frete comprado*/
+
+{
+   "purchase":{
+      "id":"9b7db98b-a646-42b3-b5a2-f1bd54bd5fba",
+      "protocol":"PUR-20240337972",
+      "total":13.39,
+      "discount":0,
+      "status":"paid",
+      "paid_at":"2024-03-05 12:47:41",
+      "canceled_at":null,
+      "created_at":"2024-03-05 12:47:41",
+      "updated_at":"2024-03-05 12:47:41",
+      "payment":null,
+      "transactions":[
+         {
+            "id":"9b7db98b-aff1-430c-9548-220780cd98a2",
+            "protocol":"TRN-20240379474",
+            "value":13.39,
+            "type":"debit",
+            "status":"authorized",
+            "description":"Pagamento de envios (PUR-20240337972)",
+            "authorized_at":"2024-03-05 12:47:41",
+            "unauthorized_at":null,
+            "reserved_at":null,
+            "canceled_at":null,
+            "created_at":"2024-03-05 12:47:41",
+            "description_internal":null,
+            "reason":{
+               "id":7,
+               "label":"Pagamento de envios",
+               "description":""
+            }
+         }
+      ],
+      "orders":[
+         {
+            "id":"9b7da83d-75e9-4316-ac7f-b31eb8c029c8",
+            "protocol":"ORD-202403202569",
+            "service_id":30,
+            "agency_id":null,
+            "contract":null,
+            "service_code":null,
+            "quote":13.39,
+            "price":13.39,
+            "coupon":null,
+            "discount":0,
+            "delivery_min":7,
+            "delivery_max":8,
+            "status":"released",
+            "reminder":null,
+            "insurance_value":0,
+            "weight":null,
+            "width":null,
+            "height":null,
+            "length":null,
+            "diameter":null,
+            "format":"box",
+            "billed_weight":0.03,
+            "receipt":false,
+            "own_hand":false,
+            "collect":false,
+            "collect_scheduled_at":null,
+            "reverse":0,
+            "non_commercial":false,
+            "authorization_code":null,
+            "tracking":null,
+            "self_tracking":null,
+            "delivery_receipt":null,
+            "additional_info":null,
+            "cte_key":null,
+            "paid_at":"2024-03-05 12:47:41",
+            "generated_at":null,
+            "posted_at":null,
+            "delivered_at":null,
+            "canceled_at":null,
+            "suspended_at":null,
+            "expired_at":null,
+            "created_at":"2024-03-05 11:59:18",
+            "updated_at":"2024-03-05 12:47:41",
+            "parse_pi_at":null,
+            "received_at":null,
+            "from":{
+               "name":"Anderson Chaves",
+               "phone":null,
+               "email":"andchaves10@gmail.com",
+               "document":"34538502898",
+               "company_document":null,
+               "state_register":null,
+               "postal_code":"19274000",
+               "address":"Travessa Alamandas",
+               "location_number":"106",
+               "complement":"Quadra 92",
+               "district":null,
+               "city":"Rosana",
+               "state_abbr":"SP",
+               "country_id":"BR",
+               "latitude":null,
+               "longitude":null,
+               "note":"skdlsdjsadkj",
+               "economic_activity_code":null
+            },
+            "to":{
+               "name":"Denise Chaves",
+               "phone":null,
+               "email":null,
+               "document":"35865777882",
+               "company_document":null,
+               "state_register":null,
+               "postal_code":"6728080",
+               "address":"Rua Barra Mansa",
+               "location_number":"557",
+               "complement":"Esmeralda Park (Caucaia do Alto)",
+               "district":null,
+               "city":"Cotia",
+               "state_abbr":"SP",
+               "country_id":"BR",
+               "latitude":null,
+               "longitude":null,
+               "note":"dsajdjs",
+               "economic_activity_code":null
+            },
+            "service":{
+               "id":30,
+               "name":"Mini Envios Centralizado",
+               "status":"unavailable",
+               "type":"economic",
+               "range":"interstate",
+               "restrictions":"{"insurance_value":{"min":0,"max":100,"max_dec":1000},"formats":{"box":{"weight":{"min":0,"max":0.3},"width":{"min":11,"max":16},"height":{"min":1,"max":4},"length":{"min":16,"max":24},"sum":44}}}",
+               "requirements":"["names","addresses","documents"]",
+               "optionals":"["AR","VD"]",
+               "company":{
+                  "id":1,
+                  "name":"Correios",
+                  "has_grouped_volumes":0,
+                  "status":"available",
+                  "picture":"/images/shipping-companies/correios.png",
+                  "tracking_link":"https://www.melhorrastreio.com.br/rastreio/",
+                  "use_own_contract":false,
+                  "batch_size":1
+               }
+            },
+            "agency":null,
+            "invoice":null,
+            "tags":[
+               
+            ],
+            "products":[
+               {
+                  "name":"Iphone",
+                  "quantity":1,
+                  "unitary_value":5,
+                  "weight":null
+               }
+            ]
+         }
+      ]
+   },
+   "digitable":null,
+   "redirect":null,
+   "message":null,
+   "token":null,
+   "payment_id":null
+}

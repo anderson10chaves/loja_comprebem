@@ -1,0 +1,24 @@
+/*Gera a Etiqueta*/
+
+{
+	"orders": [
+		"9b7da83d-75e9-4316-ac7f-b31eb8c029c8"
+	]
+}
+
+/*Retorno da geracao etiqueta*/
+
+{"9b7da83d-75e9-4316-ac7f-b31eb8c029c8":{"status":true,"message":"Envio gerado com sucesso"}}
+
+
+/*Impressao da Etiqueta*/
+
+{
+	"mode": "private" or "public"
+	"orders": [
+		"9b7da83d-75e9-4316-ac7f-b31eb8c029c8"
+	]
+}
+
+
+/*Resultado da impressao da Etiqueta*/
