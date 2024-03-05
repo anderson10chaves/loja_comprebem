@@ -21,6 +21,7 @@ import adcsistemas.loja_comprebem.model.NotaFiscalCompra;
 import adcsistemas.loja_comprebem.model.NotaFiscalVenda;
 import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioCompraNotaFiscalDTO;
 import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioProdutoAlertaEstoqueDTO;
+import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioStatusVendaAbandonadaDTO;
 import adcsistemas.loja_comprebem.repository.NotaFiscalCompraRepository;
 import adcsistemas.loja_comprebem.repository.NotaFiscalVendaRepository;
 import adcsistemas.loja_comprebem.service.NotaFiscalCompraService;
@@ -36,6 +37,18 @@ public class NotaFiscalCompraController {
 	
 	@Autowired
 	private NotaFiscalCompraService notaFiscalCompraService;
+	
+	@ResponseBody
+	@PostMapping(value = "/relatorioStatusVendaAbandonada")
+	public ResponseEntity<List<RelatorioStatusVendaAbandonadaDTO>> relatorioStatusVendaAbandonada(@Valid @RequestBody RelatorioStatusVendaAbandonadaDTO relatorioStatusVendaAbandonadaDTO){
+		
+		List<RelatorioStatusVendaAbandonadaDTO> retorno =
+				new ArrayList<RelatorioStatusVendaAbandonadaDTO>();
+		
+		retorno = notaFiscalCompraService.gerarrelatorioStatusVendaAbandonada(relatorioStatusVendaAbandonadaDTO);
+		
+		return new ResponseEntity<List<RelatorioStatusVendaAbandonadaDTO>>(retorno, HttpStatus.OK);
+	}
 	
 	@ResponseBody
 	@PostMapping(value = "/relatorioProdutoCompNotaFiscal")

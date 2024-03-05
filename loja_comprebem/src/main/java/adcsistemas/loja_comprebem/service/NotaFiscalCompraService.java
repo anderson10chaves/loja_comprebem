@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioCompraNotaFiscalDTO;
 import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioProdutoAlertaEstoqueDTO;
+import adcsistemas.loja_comprebem.model.dto.relatorios.RelatorioStatusVendaAbandonadaDTO;
 
 @Service
 public class NotaFiscalCompraService {
@@ -104,6 +105,75 @@ public class NotaFiscalCompraService {
 		}
 		
 		retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper(RelatorioProdutoAlertaEstoqueDTO.class));
+		
+		return retorno;
+	}
+	
+	
+	public List<RelatorioStatusVendaAbandonadaDTO> gerarrelatorioStatusVendaAbandonada(RelatorioStatusVendaAbandonadaDTO relatorioStatusVendaAbandonada) {
+		
+		List<RelatorioStatusVendaAbandonadaDTO> retorno = new ArrayList<RelatorioStatusVendaAbandonadaDTO>();
+		
+		String sql = " select p.id as codigoProduto, "
+				+ "p.nome as nomeProduto, "
+				+ "pf.email as emailCliente, "
+				+ "pf.telefone as foneCliente, "
+				+ "p.valor_venda as valorVenda, "
+				+ "pf.id as codigoCliente, "
+				+ "pf.nome as nomeCliente, "
+				+ "p.qtd_estoque as qtdEstoque, "
+				+ "cfc.id as codigoVenda, "
+				+ "cfc.status_venda_loja_virtual as statusVenda "
+				+ "from vd_cp_loja_virt as cfc "
+				+ "inner join item_venda_loja as ntp on  ntp.venda_compra_loja_virt_id = cfc.id "
+				+ "inner join produto as p on p.id = ntp.produto_id "
+				+ "inner join pessoa_fisica as pf on pf.id = cfc.pessoa_id ";
+				
+		
+		sql += " where cfc.data_venda >= '" +relatorioStatusVendaAbandonada.getDataInicial()+ "' and cfc.data_venda <= '"+relatorioStatusVendaAbandonada.getDataFinal()+"'";
+		
+		
+		/*if(!relatorioStatusVendaAbandonada.getDataInicial().isEmpty()) {
+			sql += " cfc.data_venda = "+relatorioStatusVendaAbandonada.getDataInicial()+ "";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getDataFinal().isEmpty()) {
+			sql += " cfc.data_venda = "+relatorioStatusVendaAbandonada.getDataFinal()+ "";
+		}*/
+		
+		if(!relatorioStatusVendaAbandonada.getCodigoVenda().isEmpty()) {
+			sql += " and cfc.id = " +relatorioStatusVendaAbandonada.getCodigoVenda() + " ";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getCodidoCliente().isEmpty()) {
+			sql += " and p.id = " +relatorioStatusVendaAbandonada.getCodidoCliente() + " ";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getStatusVenda().isEmpty()) {
+			sql += " cfc.status_venda_loja_virtual in ('"+relatorioStatusVendaAbandonada.getStatusVenda()+"')";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getNomeProduto().isEmpty()) {
+			sql += " or upper(p.nome) like upper('%"+relatorioStatusVendaAbandonada.getNomeProduto()+"%')";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getNomeCliente().isEmpty()) {
+			sql += " and pf.nome like upper('%"+relatorioStatusVendaAbandonada.getNomeCliente()+"%') ";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getEmailCliente().isEmpty()) {
+			sql += " and pf.email like upper('%"+relatorioStatusVendaAbandonada.getEmailCliente()+"%') ";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getFoneCliente().isEmpty()) {
+			sql += " and pf.telefone like upper('%"+relatorioStatusVendaAbandonada.getFoneCliente()+"%') ";
+		}
+		
+		if(!relatorioStatusVendaAbandonada.getValorVendaProduto().isEmpty()) {
+			sql += " and p.valor_venda('"+relatorioStatusVendaAbandonada.getValorVendaProduto()+"') ";
+		}
+		
+		retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper(RelatorioStatusVendaAbandonadaDTO.class));
 		
 		return retorno;
 	}

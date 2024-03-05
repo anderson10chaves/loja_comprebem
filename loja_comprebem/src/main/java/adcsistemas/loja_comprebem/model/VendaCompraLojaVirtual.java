@@ -104,7 +104,7 @@ public class VendaCompraLojaVirtual implements Serializable {
 	private Empresa empresa;
 	
 	@Column(nullable = false)
-	@NotNull(message = "Status da venda é Obrigatório")
+	@NotNull(message = "Status da venda ou compra é Obrigatório")
 	@Enumerated(EnumType.STRING)
 	private StatusVendaLojaVirtual statusVendaLojaVirtual;
 	
