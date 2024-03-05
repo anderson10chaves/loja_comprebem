@@ -133,13 +133,6 @@ public class NotaFiscalCompraService {
 		sql += " where cfc.data_venda >= '" +relatorioStatusVendaAbandonada.getDataInicial()+ "' and cfc.data_venda <= '"+relatorioStatusVendaAbandonada.getDataFinal()+"'";
 		
 		
-		/*if(!relatorioStatusVendaAbandonada.getDataInicial().isEmpty()) {
-			sql += " cfc.data_venda = "+relatorioStatusVendaAbandonada.getDataInicial()+ "";
-		}
-		
-		if(!relatorioStatusVendaAbandonada.getDataFinal().isEmpty()) {
-			sql += " cfc.data_venda = "+relatorioStatusVendaAbandonada.getDataFinal()+ "";
-		}*/
 		
 		if(!relatorioStatusVendaAbandonada.getCodigoVenda().isEmpty()) {
 			sql += " and cfc.id = " +relatorioStatusVendaAbandonada.getCodigoVenda() + " ";

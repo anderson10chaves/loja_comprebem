@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -21,6 +22,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import adcsistemas.loja_comprebem.ApiTokenIntegracao;
 import adcsistemas.loja_comprebem.enums.StatusContaReceber;
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.ContaReceber;
@@ -38,6 +43,12 @@ import adcsistemas.loja_comprebem.repository.StatusRastreioRepository;
 import adcsistemas.loja_comprebem.repository.VendaCompraLojaVirtualRepository;
 import adcsistemas.loja_comprebem.service.SendEmailService;
 import adcsistemas.loja_comprebem.service.VendaService;
+import adcsistemas.loja_comprebem.transportadora.dto.ConsultaApiFreteDTO;
+import adcsistemas.loja_comprebem.transportadora.dto.TransportadoraDTO;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @RestController
 public class VendaCompraLojaVirtualController {
@@ -365,6 +376,73 @@ public class VendaCompraLojaVirtualController {
 
 		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(vendaCompraLojaVirtualDTOList, HttpStatus.OK);
 
+	}
+	
+	/**
+	 * Realiza a consulta api de fretes e retorna valor no momento da venda.
+	 * @param consultaApiFreteDTO
+	 * @return ConsultaApiFreteDTO
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@PostMapping(value = "/calculaFreteLojaVirtual")
+	public ResponseEntity<List<TransportadoraDTO>> 
+		consultaApiFrete(@RequestBody @Valid ConsultaApiFreteDTO consultaApiFreteDTO) throws Exception {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(consultaApiFreteDTO);
+		
+		OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, json);
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"/api/v2/me/shipment/calculate")
+		  .method("POST", body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", "andchaves10@icloud.com")
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		JsonNode jsonNode = new ObjectMapper().readTree(response.body().string());
+		
+		Iterator<JsonNode> iterator = jsonNode.iterator();
+		
+		List<TransportadoraDTO> transportadoraDTOs = new ArrayList<TransportadoraDTO>();
+		
+		
+		while(iterator.hasNext()) {
+			JsonNode node = iterator.next();
+		
+			TransportadoraDTO transportadoraDTO = new TransportadoraDTO();
+			
+			
+			if(node.get("id") != null) {
+				transportadoraDTO.setId(node.get("id").asText());
+			}
+			
+			if(node.get("name") != null) {
+				transportadoraDTO.setNome(node.get("name").asText());
+			}
+			
+			if(node.get("price") != null) {
+				transportadoraDTO.setNome(node.get("price").asText());
+			}
+			
+			if(node.get("company") != null) {
+				transportadoraDTO.setCompany(node.get("company").get("name").asText());
+				transportadoraDTO.setPicture(node.get("company").get("picture").asText());
+			}
+			
+			if(transportadoraDTO.dadosOk()) {
+				transportadoraDTOs.add(transportadoraDTO);
+			}
+		}
+		
+		return new ResponseEntity<List<TransportadoraDTO>>(transportadoraDTOs, HttpStatus.OK);
 	}
 
 	@ResponseBody

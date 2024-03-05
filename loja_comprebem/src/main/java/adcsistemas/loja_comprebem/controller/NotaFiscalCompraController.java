@@ -38,6 +38,12 @@ public class NotaFiscalCompraController {
 	@Autowired
 	private NotaFiscalCompraService notaFiscalCompraService;
 	
+	
+	/**
+	 * Este relatorio pesquisa venda não finalizada por cliente
+	 * @param relatorioStatusVendaAbandonadaDTO
+	 * @return RelatorioStatusVendaAbandonadaDTO
+	 */
 	@ResponseBody
 	@PostMapping(value = "/relatorioStatusVendaAbandonada")
 	public ResponseEntity<List<RelatorioStatusVendaAbandonadaDTO>> relatorioStatusVendaAbandonada(@Valid @RequestBody RelatorioStatusVendaAbandonadaDTO relatorioStatusVendaAbandonadaDTO){
