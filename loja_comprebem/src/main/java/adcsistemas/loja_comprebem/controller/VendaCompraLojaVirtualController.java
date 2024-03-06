@@ -1,5 +1,6 @@
 package adcsistemas.loja_comprebem.controller;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -13,12 +14,14 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +39,10 @@ import adcsistemas.loja_comprebem.model.StatusRastreio;
 import adcsistemas.loja_comprebem.model.VendaCompraLojaVirtual;
 import adcsistemas.loja_comprebem.model.dto.ItemVendaDTO;
 import adcsistemas.loja_comprebem.model.dto.VendaCompraLojaVirtualDTO;
+import adcsistemas.loja_comprebem.model.dto.etiiqueta.EnvioEtiquetaDTO;
+import adcsistemas.loja_comprebem.model.dto.etiiqueta.ProductsEnvioEtiquetaDTO;
+import adcsistemas.loja_comprebem.model.dto.etiiqueta.TagsEnvioEtiquetaDTO;
+import adcsistemas.loja_comprebem.model.dto.etiiqueta.VolumesEnvioEtiquetaDTO;
 import adcsistemas.loja_comprebem.repository.ContaReceberRepository;
 import adcsistemas.loja_comprebem.repository.EnderecoRepository;
 import adcsistemas.loja_comprebem.repository.NotaFiscalVendaRepository;
@@ -76,6 +83,9 @@ public class VendaCompraLojaVirtualController {
 	
 	@Autowired
 	private SendEmailService sendEmailService;
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	@ResponseBody
 	@PostMapping(value = "/salvarVendas")
@@ -95,6 +105,11 @@ public class VendaCompraLojaVirtualController {
 		vendaCompraLojaVirtual.setEnderecoEntrega(enderecoEntrega);
 
 		vendaCompraLojaVirtual.getNotaFiscalVenda().setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+		
+		for (int i = 0; i < vendaCompraLojaVirtual.getItemVendaLojas().size(); i++) {
+			vendaCompraLojaVirtual.getItemVendaLojas().get(i).setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+			vendaCompraLojaVirtual.getItemVendaLojas().get(i).setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+		}
 		/* Salva primeiro a venda e todos dados do cliente */
 		vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.saveAndFlush(vendaCompraLojaVirtual);
 
@@ -378,73 +393,7 @@ public class VendaCompraLojaVirtualController {
 
 	}
 	
-	/**
-	 * Realiza a consulta api de fretes e retorna valor no momento da venda.
-	 * @param consultaApiFreteDTO
-	 * @return ConsultaApiFreteDTO
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@PostMapping(value = "/calculaFreteLojaVirtual")
-	public ResponseEntity<List<TransportadoraDTO>> 
-		consultaApiFrete(@RequestBody @Valid ConsultaApiFreteDTO consultaApiFreteDTO) throws Exception {
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(consultaApiFreteDTO);
-		
-		OkHttpClient client = new OkHttpClient().newBuilder().build();
-
-		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
-		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, json);
-		okhttp3.Request request = new okhttp3.Request.Builder()
-		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"/api/v2/me/shipment/calculate")
-		  .method("POST", body)
-		  .addHeader("Accept", "application/json")
-		  .addHeader("Content-Type", "application/json")
-		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
-		  .addHeader("User-Agent", "andchaves10@icloud.com")
-		  .build();
-
-		okhttp3.Response response = client.newCall(request).execute();
-		
-		JsonNode jsonNode = new ObjectMapper().readTree(response.body().string());
-		
-		Iterator<JsonNode> iterator = jsonNode.iterator();
-		
-		List<TransportadoraDTO> transportadoraDTOs = new ArrayList<TransportadoraDTO>();
-		
-		
-		while(iterator.hasNext()) {
-			JsonNode node = iterator.next();
-		
-			TransportadoraDTO transportadoraDTO = new TransportadoraDTO();
-			
-			
-			if(node.get("id") != null) {
-				transportadoraDTO.setId(node.get("id").asText());
-			}
-			
-			if(node.get("name") != null) {
-				transportadoraDTO.setNome(node.get("name").asText());
-			}
-			
-			if(node.get("price") != null) {
-				transportadoraDTO.setNome(node.get("price").asText());
-			}
-			
-			if(node.get("company") != null) {
-				transportadoraDTO.setCompany(node.get("company").get("name").asText());
-				transportadoraDTO.setPicture(node.get("company").get("picture").asText());
-			}
-			
-			if(transportadoraDTO.dadosOk()) {
-				transportadoraDTOs.add(transportadoraDTO);
-			}
-		}
-		
-		return new ResponseEntity<List<TransportadoraDTO>>(transportadoraDTOs, HttpStatus.OK);
-	}
-
+	
 	@ResponseBody
 	@GetMapping(value = "/pesquisaVendaDinamicaData/{data1}/{data2}")
 	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> pesquisaVendaDinamicaData(
@@ -596,5 +545,308 @@ public class VendaCompraLojaVirtualController {
 
 		return new ResponseEntity<String>("Venda Ativada com sucesso!", HttpStatus.OK);
 	}
+	
+	
+	@ResponseBody
+	@GetMapping(value = "/imprimeCompraEtiquetaFrete/{idVenda}")
+	public ResponseEntity<String> imprimeCompraEtiquetaFrete(@PathVariable Long idVenda) throws Exception, IOException {
+		
+		VendaCompraLojaVirtual compraLojaVirtual = vendaCompraLojaVirtualRepository.findById(idVenda).orElseGet(null);
+		
+		if(compraLojaVirtual == null) {
+			return new ResponseEntity<String>("Venda não encontrada", HttpStatus.OK);
+		}
+		
+		/*Carrega os endereco empresas*/
+		List<Endereco> enderecos = enderecoRepository.enderecoEmp(compraLojaVirtual.getEmpresa().getId());
+		compraLojaVirtual.getEmpresa().setEnderecos(enderecos);
+		
+		/**
+		 * Envio de pedido de etiqueta frete, pedido pelo cliente e passado dados remetente
+		 * 
+		 */
+		EnvioEtiquetaDTO envioEtiquetaDTO = new EnvioEtiquetaDTO();
+		
+		envioEtiquetaDTO.setService(compraLojaVirtual.getServicoTransportadora());
+		envioEtiquetaDTO.setAgency("30");
+		envioEtiquetaDTO.getFrom().setName(compraLojaVirtual.getEmpresa().getNome());
+		envioEtiquetaDTO.getFrom().setPhone(compraLojaVirtual.getEmpresa().getTelefone());
+		envioEtiquetaDTO.getFrom().setEmail(compraLojaVirtual.getEmpresa().getEmail());
+		envioEtiquetaDTO.getFrom().setCompany_document(compraLojaVirtual.getEmpresa().getCnpj());
+		envioEtiquetaDTO.getFrom().setState_register(compraLojaVirtual.getEmpresa().getInscEstadual());
+		envioEtiquetaDTO.getFrom().setAddress(compraLojaVirtual.getEmpresa().getEnderecos().get(0).getLogradouro());
+		envioEtiquetaDTO.getFrom().setComplement(compraLojaVirtual.getEmpresa().getEnderecos().get(0).getComplemento());
+		envioEtiquetaDTO.getFrom().setNumber(compraLojaVirtual.getEmpresa().getEmpresa().getEnderecos().get(0).getNumero());
+		envioEtiquetaDTO.getFrom().setDistrict(compraLojaVirtual.getEmpresa().getEnderecos().get(0).getUf());
+		envioEtiquetaDTO.getFrom().setCity(compraLojaVirtual.getEmpresa().getEnderecos().get(0).getCidade());
+		envioEtiquetaDTO.getFrom().setCountry_id(compraLojaVirtual.getEmpresa().getEnderecos().get(0).getPais());
+		envioEtiquetaDTO.getFrom().setPostal_code(compraLojaVirtual.getEmpresa().getEnderecos().get(0).getCep());
+		envioEtiquetaDTO.getFrom().setNote("Não Há anotações");
+		
+		
+		/**
+		 * Envio de pedido de etiqueta frete, pedido pelo cliente e passado dados destinatário
+		 * 
+		 */
+		envioEtiquetaDTO.getTo().setName(compraLojaVirtual.getPessoaFisica().getNome());
+		envioEtiquetaDTO.getTo().setPhone(compraLojaVirtual.getPessoaFisica().getTelefone());
+		envioEtiquetaDTO.getTo().setEmail(compraLojaVirtual.getPessoaFisica().getEmail());
+		envioEtiquetaDTO.getTo().setDocument(compraLojaVirtual.getPessoaFisica().getCpf());
+		envioEtiquetaDTO.getTo().setAddress(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getLogradouro());
+		envioEtiquetaDTO.getTo().setComplement(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getComplemento());
+		envioEtiquetaDTO.getTo().setNumber(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getNumero());
+		envioEtiquetaDTO.getTo().setDistrict(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getUf());
+		envioEtiquetaDTO.getTo().setCity(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getCidade());
+		envioEtiquetaDTO.getTo().setState_abbr(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getUf());
+		envioEtiquetaDTO.getTo().setCountry_id(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getPais());
+		envioEtiquetaDTO.getTo().setPostal_code(compraLojaVirtual.getPessoaFisica().enderecoEntrega().getCep());
+		envioEtiquetaDTO.getTo().setNote("Não Há anotações");
+		
+		/**
+		 * Envio de pedido de etiqueta frete, pedido pelo cliente e passado os produtos
+		 * 
+		 */
+		List<ProductsEnvioEtiquetaDTO> produtcs = new ArrayList<ProductsEnvioEtiquetaDTO>();
+		
+		for(ItemVendaLoja itemVendaLoja : compraLojaVirtual.getItemVendaLojas()) {
+			
+			ProductsEnvioEtiquetaDTO dto = new ProductsEnvioEtiquetaDTO();
+			
+			dto.setName(itemVendaLoja.getProduto().getNome());
+			dto.setQuantity(itemVendaLoja.getQuantidade().toString());
+			dto.setUnitary_value("" + itemVendaLoja.getProduto().getValorVenda().doubleValue());
+			
+			produtcs.add(dto);
+			
+		}
+		
+		envioEtiquetaDTO.setProducts(produtcs);
+		
+		List<VolumesEnvioEtiquetaDTO> volumes = new ArrayList<VolumesEnvioEtiquetaDTO>();
+		
+		for (ItemVendaLoja itemVendaLoja : compraLojaVirtual.getItemVendaLojas()) {
+			
+			VolumesEnvioEtiquetaDTO dto = new VolumesEnvioEtiquetaDTO();
+			
+			dto.setHeight(itemVendaLoja.getProduto().getAltura().toString());
+			dto.setLength(itemVendaLoja.getProduto().getProfundidade().toString());
+			dto.setWeight(itemVendaLoja.getProduto().getPeso().toString());
+			dto.setWidth(itemVendaLoja.getProduto().getLargura().toString());
+			
+			volumes.add(dto);
+		}
+		
+		
+		envioEtiquetaDTO.setVolumes(volumes);
+		
+		
+		envioEtiquetaDTO.setVolumes(volumes);
+		
+		envioEtiquetaDTO.getOptions().setInsurance_value("" + compraLojaVirtual.getValorTotal().doubleValue());
+		envioEtiquetaDTO.getOptions().setReceipt(false);
+		envioEtiquetaDTO.getOptions().setOwn_hand(false);
+		envioEtiquetaDTO.getOptions().setOwn_hand(false);
+		envioEtiquetaDTO.getOptions().setNon_commercial(false);
+		envioEtiquetaDTO.getOptions().getInvoice().setKey(compraLojaVirtual.getNotaFiscalVenda().getNumero());
+		envioEtiquetaDTO.getOptions().setPlatform(compraLojaVirtual.getEmpresa().getNomeFantasia());
+		
+		TagsEnvioEtiquetaDTO tagEnvio = new TagsEnvioEtiquetaDTO();
+		tagEnvio.setTag("Identificação do pedido na plataforma, exemplo" + compraLojaVirtual.getId());
+		tagEnvio.setUrl(null);
+		envioEtiquetaDTO.getOptions().getTags().add(tagEnvio);
+
+		String jsonEnvio = new ObjectMapper().writeValueAsString(envioEtiquetaDTO);
+		
+		/**
+		 * Insere as etiquetas de frete
+		 */
+		OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, jsonEnvio);
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/cart")
+		  .method("POST", body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "+ ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		Response response = client.newCall(request).execute();
+		
+		String respostaJson = response.body().string();
+		
+		if (respostaJson.contains("error")) {
+			throw new ExceptionLojaComprebem(respostaJson);
+		}
+		
+		JsonNode jsonNode = new ObjectMapper().readTree(respostaJson);
+		
+		Iterator<JsonNode> iterator = jsonNode.iterator();
+		
+		String idEtiqueta = "";
+		while(iterator.hasNext()) {
+			JsonNode node = iterator.next();
+			if (node.get("id") != null) {
+				idEtiqueta = node.get("id").asText();
+			}else {
+				idEtiqueta = node.asText();
+			}
+			break;
+		}
+		
+		/*Salvando o codigo da etiqueta*/
+		
+		jdbcTemplate.execute("begin; update vd_cp_loja_virt set codigo_etiqueta = '"+idEtiqueta+"' where id = " + compraLojaVirtual.getId() + " ;commit;");
+		//vendaCompraLojaVirtualRepository.updateEtiqueta(idEtiqueta, compraLojaVirtual.getId());
+		
+		
+		/**
+		 * Faz a compra do frete para etiqueta
+		 */
+		OkHttpClient clientCompra = new OkHttpClient().newBuilder().build();
+		 okhttp3.MediaType mediaTypeC =  okhttp3.MediaType.parse("application/json");
+		 okhttp3.RequestBody bodyC =  okhttp3.RequestBody.create(mediaTypeC, "{\n    \"orders\": [\n        \""+idEtiqueta+"\"\n    ]\n}");
+		 okhttp3.Request requestC = new  okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX  +"api/v2/me/shipment/checkout")
+		  .method("POST", bodyC)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+		
+		 okhttp3.Response responseC = clientCompra.newCall(requestC).execute();
+		 
+		 if (!responseC.isSuccessful()) {
+			 return new ResponseEntity<String>("Não foi possível realizar a compra da etiqueta", HttpStatus.OK); 
+		 }
+		
+		/**
+		 * Gera as etiquetas
+		 */
+		
+		OkHttpClient clientGera = new OkHttpClient().newBuilder().build();
+
+		okhttp3.MediaType mediaTypeG = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody bodyG = okhttp3.RequestBody.create(mediaTypeG, "{\"mode\":\"private\"orders\":[\""+idEtiqueta+"\"]}");
+		okhttp3.Request requestG = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX + "api/v2/me/shipment/generate")
+		  .post(bodyG)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response responseG = clientGera.newCall(requestG).execute();
+		
+		if(!responseG.isSuccessful()) {
+			return new ResponseEntity<String>("Não foi possível completar a impressão da etiqueta", HttpStatus.OK);
+		}
+		
+		
+		/**
+		 * Imprime as etiquetas
+		 */
+		
+		OkHttpClient clientIm = new OkHttpClient().newBuilder().build();
+
+		okhttp3.MediaType mediaTypeIm = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody bodyIm = okhttp3.RequestBody.create(mediaTypeIm, "{\"mode\": \"private\",    \"orders\": [\""+idEtiqueta+"\"]}");
+		okhttp3.Request requestIm = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX + "api/v2/me/shipment/print")
+		  .method("POST", bodyIm)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		Response responseIm = clientIm.newCall(requestIm).execute();
+		
+		if (!responseIm.isSuccessful()) {
+			return new ResponseEntity<String>("Não foi possível completar a emissão da etiqueta", HttpStatus.OK);
+		}
+		
+		String urlEtiqueta = responseIm.body().string();
+		
+		/*Salvando a url da etiqueta*/
+		
+		jdbcTemplate.execute("begin; update vd_cp_loja_virt set url_imp_etiqueta = '"+urlEtiqueta+"' where id = " + compraLojaVirtual.getId() + ";commit;");
+		//vendaCompraLojaVirtualRepository.updateUrlEtiqueta(urlEtiqueta, compraLojaVirtual.getId());
+		
+		return new ResponseEntity<String>("Sucesso", HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * Realiza a consulta api de fretes e retorna valor no momento da venda.
+	 * @param consultaApiFreteDTO
+	 * @return ConsultaApiFreteDTO
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@PostMapping(value = "/calculaFreteLojaVirtual")
+	public ResponseEntity<List<TransportadoraDTO>> 
+		consultaApiFrete(@RequestBody @Valid ConsultaApiFreteDTO consultaApiFreteDTO) throws Exception {
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(consultaApiFreteDTO);
+		
+		OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, json);
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"/api/v2/me/shipment/calculate")
+		  .method("POST", body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		JsonNode jsonNode = new ObjectMapper().readTree(response.body().string());
+		
+		Iterator<JsonNode> iterator = jsonNode.iterator();
+		
+		List<TransportadoraDTO> transportadoraDTOs = new ArrayList<TransportadoraDTO>();
+		
+		
+		while(iterator.hasNext()) {
+			JsonNode node = iterator.next();
+		
+			TransportadoraDTO transportadoraDTO = new TransportadoraDTO();
+			
+			
+			if(node.get("id") != null) {
+				transportadoraDTO.setId(node.get("id").asText());
+			}
+			
+			if(node.get("name") != null) {
+				transportadoraDTO.setNome(node.get("name").asText());
+			}
+			
+			if(node.get("price") != null) {
+				transportadoraDTO.setNome(node.get("price").asText());
+			}
+			
+			if(node.get("company") != null) {
+				transportadoraDTO.setCompany(node.get("company").get("name").asText());
+				transportadoraDTO.setPicture(node.get("company").get("picture").asText());
+			}
+			
+			if(transportadoraDTO.dadosOk()) {
+				transportadoraDTOs.add(transportadoraDTO);
+			}
+		}
+		
+		return new ResponseEntity<List<TransportadoraDTO>>(transportadoraDTOs, HttpStatus.OK);
+	}
+
 
 }

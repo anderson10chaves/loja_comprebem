@@ -27,6 +27,8 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import adcsistemas.loja_comprebem.enums.TipoEndereco;
+
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @SequenceGenerator(name = "seq_pessoa", sequenceName = "seq_pessoa", allocationSize = 1, initialValue = 1)
@@ -64,6 +66,22 @@ public abstract class Pessoa implements Serializable {
 	@ManyToOne(targetEntity = Empresa.class)
 	@JoinColumn(name = "empresa_id", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
 	private Empresa empresa;
+	
+	public Endereco enderecoEntrega() {
+		
+		Endereco enderecoRetorno = null;
+		
+		for (Endereco endereco : enderecos) {
+			if(endereco.getTipoEndereco().name().equals(TipoEndereco.ENTREGA.name())) {
+				enderecoRetorno = endereco;
+				
+				break;
+			}
+		}
+		
+		return enderecoRetorno;
+	}
+
 
 	public Long getId() {
 		return id;

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -66,4 +67,12 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
 	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i"
 			+ " where i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.pessoaFisica.cpf)) like %?1%")
 	List<VendaCompraLojaVirtual> pesquisaVendaCpf(String cpf);
+
+	@Modifying(flushAutomatically = true)
+	@Query(nativeQuery = true, value = "update vd_cp_loja_virt set codigo_etiqueta = ?1 where id = ?2")
+	void updateEtiqueta(String idEtiqueta, Long idVenda);
+
+	@Modifying(flushAutomatically = true)
+	@Query(nativeQuery = true, value = "update vd_cp_loja_virt set url_imp_etiqueta = ?1 where id = ?2")
+	void updateUrlEtiqueta(String urlEtiqueta, Long id);
 }
