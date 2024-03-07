@@ -11,6 +11,25 @@ public class TesteApiMelhorEnvio {
 	public static void main(String[] args) throws Exception {
 		
 		/**
+		 * Listar transportadoras
+		 */
+		
+		OkHttpClient client = new OkHttpClient();
+
+		Request request = new Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/shipment/agencies?company=2&country=BR&state=SP&city=ROSANA")
+		  .get()
+		  .addHeader("accept", "application/json")
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		Response response = client.newCall(request).execute();
+		
+		
+		System.out.println(response.body().string());
+		
+		
+		/**
 		 * Insere as etiquetas de frete
 		 */
 		/*OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -78,7 +97,7 @@ public class TesteApiMelhorEnvio {
 		 * Imprime as etiquetas
 		 */
 		
-		OkHttpClient client = new OkHttpClient().newBuilder().build();
+		/*OkHttpClient client = new OkHttpClient().newBuilder().build();
 
 		MediaType mediaType = MediaType.parse("application/json");
 		RequestBody body = RequestBody.create(mediaType, "{\"orders\":[\"9b7da83d-75e9-4316-ac7f-b31eb8c029c8\"]}");
@@ -93,6 +112,6 @@ public class TesteApiMelhorEnvio {
 
 		Response response = client.newCall(request).execute();
 		
-		System.out.println(response.body().string());
+		System.out.println(response.body().string());*/
 	}
 }

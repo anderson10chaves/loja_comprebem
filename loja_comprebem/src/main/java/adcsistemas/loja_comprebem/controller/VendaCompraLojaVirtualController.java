@@ -52,9 +52,7 @@ import adcsistemas.loja_comprebem.service.SendEmailService;
 import adcsistemas.loja_comprebem.service.VendaService;
 import adcsistemas.loja_comprebem.transportadora.dto.ConsultaApiFreteDTO;
 import adcsistemas.loja_comprebem.transportadora.dto.TransportadoraDTO;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 @RestController
@@ -547,6 +545,269 @@ public class VendaCompraLojaVirtualController {
 	}
 	
 	
+	
+	/**
+	 * Lista todas Etiquetas Pendentes de envio
+	 * @param pendente
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "statusEtiquetaPendente/{pendente}")
+	public ResponseEntity<String> pendenteEtiqueta(@PathVariable String pendente) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status="+pendente+"}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/orders?status=pending")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * Etiqueta Realizada
+	 * @param realizada
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "statusEtiquetaRealizada/{realizada}")
+	public ResponseEntity<String> realizadaEtiqueta(@PathVariable String realizada) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status="+realizada+"}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/orders?status=Released")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * Etiquetas Postada ou enviado
+	 * @param enviado
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "statusEtiquetaEnviada/{enviado}")
+	public ResponseEntity<String> enviadoEtiqueta(@PathVariable String enviado) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status="+enviado+"}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/orders?status=Posted")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * Etiqueta em transporte a caminho
+	 * @param transporte
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "statusEtiquetaTransporte/{transporte}")
+	public ResponseEntity<String> transporteEtiqueta(@PathVariable String transporte) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status=transporte}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/orders?status=Delivered")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	}
+	/**
+	 * Etiqueta que não estão em transporte
+	 * @param naotransporte
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "statusEtiquetaNaoTransporte/{naotransporte}")
+	public ResponseEntity<String> transporteNaoEtiqueta(@PathVariable String naotransporte) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status="+naotransporte+"}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/orders?status=Not%20Delivered")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * Lista todas as Etiquetas Canceladas
+	 * @param cancelado
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "statusEtiquetaCancelado/{cancelado}")
+	public ResponseEntity<String> canceladoEtiqueta(@PathVariable String cancelado) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status="+cancelado+"}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/orders?status=cancelled")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	} 
+	
+	/**
+	 * Pesquisa Agencia ou Transportadoras por estado
+	 * @param estado
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "pesquisaAgenciaPorEstados/{estado}")
+	public ResponseEntity<String> pesquisaEtiquetaPorEstado(@PathVariable String estado) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status="+estado+"}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/shipment/agencies?")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	} 
+	
+	/**
+	 * Pesquisa Transportadora Por Cidades
+	 * @param cidade
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@GetMapping(value = "pesquisaAgenciaPorCidade/{cidade}")
+	public ResponseEntity<String> pesquisaEtiquetaPorCidade(@PathVariable String cidade) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{/orders?status="+cidade+"}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/shipment/agencies?")
+		  .get()
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	} 
+	
+	/**
+	 * Cancelamento de Etiquetas pelo Vendedor
+	 * @param idEtiqueta
+	 * @param descricao
+	 * @param reason_id
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@PostMapping(value = "cancelaEtiqueta/{idEtiqueta}/{descricao}")
+	public ResponseEntity<String> cancelaEtiqueta(@PathVariable String idEtiqueta, @PathVariable String descricao, @PathVariable String reason_id) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{\"order\":{\"reason_id\":\"2\",\"id\":\""+idEtiqueta+"\",\"description\":\""+descricao+"\"}}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/shipment/cancel")
+		  .post(body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "  + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response response = client.newCall(request).execute();
+		
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
+		
+	}
+	
 	@ResponseBody
 	@GetMapping(value = "/imprimeCompraEtiquetaFrete/{idVenda}")
 	public ResponseEntity<String> imprimeCompraEtiquetaFrete(@PathVariable Long idVenda) throws Exception, IOException {
@@ -780,6 +1041,12 @@ public class VendaCompraLojaVirtualController {
 		return new ResponseEntity<String>("Sucesso", HttpStatus.OK);
 		
 	}
+	
+	/**
+	 * @throws IOException 
+	 * 
+	 */
+	
 	
 	/**
 	 * Realiza a consulta api de fretes e retorna valor no momento da venda.
