@@ -3,6 +3,7 @@ package adcsistemas.loja_comprebem.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,23 +29,29 @@ public class StatusRastreio implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_status_rastreio")
 	private Long id;
 
-	private String centroDistruicao;
-
-	private String cidade;
-
-	private String estado;
-
-	private String status;
+	private String urlRastreio;
 
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "venda_compra_loja_virt_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_virt_fk"))
 	private VendaCompraLojaVirtual vendaCompraLojaVirtual;
+	
+	@JsonIgnore
+	@ManyToOne(targetEntity = PessoaFisica.class)
+	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
+	private PessoaFisica pessoafisica;
 
 	@JsonIgnore
 	@ManyToOne(targetEntity = Empresa.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
 	private Empresa empresa;
+	
+	//@NotNull(message =  "O endereço de entrega é obrigatório")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "endereco_entrega_id", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_entrega_fk"))
+	private Endereco enderecoEntrega;
+	
+	
 
 	public Long getId() {
 		return id;
@@ -52,37 +60,15 @@ public class StatusRastreio implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	
 
-	public String getCentroDistruicao() {
-		return centroDistruicao;
+	public String getUrlRastreio() {
+		return urlRastreio;
 	}
 
-	public void setCentroDistruicao(String centroDistruicao) {
-		this.centroDistruicao = centroDistruicao;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
+	public void setUrlRastreio(String urlRastreio) {
+		this.urlRastreio = urlRastreio;
 	}
 
 	public VendaCompraLojaVirtual getVendaCompraLojaVirtual() {
@@ -99,6 +85,26 @@ public class StatusRastreio implements Serializable {
 
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
+	}
+	
+	
+
+	public PessoaFisica getPessoafisica() {
+		return pessoafisica;
+	}
+
+	public void setPessoafisica(PessoaFisica pessoafisica) {
+		this.pessoafisica = pessoafisica;
+	}
+	
+	
+
+	public Endereco getEnderecoEntrega() {
+		return enderecoEntrega;
+	}
+
+	public void setEnderecoEntrega(Endereco enderecoEntrega) {
+		this.enderecoEntrega = enderecoEntrega;
 	}
 
 	@Override

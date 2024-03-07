@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,13 +31,16 @@ import adcsistemas.loja_comprebem.ApiTokenIntegracao;
 import adcsistemas.loja_comprebem.enums.StatusContaReceber;
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.ContaReceber;
+import adcsistemas.loja_comprebem.model.Empresa;
 import adcsistemas.loja_comprebem.model.Endereco;
 import adcsistemas.loja_comprebem.model.ItemVendaLoja;
+import adcsistemas.loja_comprebem.model.Pessoa;
 import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.model.StatusRastreio;
 import adcsistemas.loja_comprebem.model.VendaCompraLojaVirtual;
 import adcsistemas.loja_comprebem.model.dto.ItemVendaDTO;
 import adcsistemas.loja_comprebem.model.dto.VendaCompraLojaVirtualDTO;
+import adcsistemas.loja_comprebem.model.dto.etiiqueta.ApiToEnvioEtiquetaDTO;
 import adcsistemas.loja_comprebem.model.dto.etiiqueta.EnvioEtiquetaDTO;
 import adcsistemas.loja_comprebem.model.dto.etiiqueta.ProductsEnvioEtiquetaDTO;
 import adcsistemas.loja_comprebem.model.dto.etiiqueta.TagsEnvioEtiquetaDTO;
@@ -52,7 +54,9 @@ import adcsistemas.loja_comprebem.service.SendEmailService;
 import adcsistemas.loja_comprebem.service.VendaService;
 import adcsistemas.loja_comprebem.transportadora.dto.ConsultaApiFreteDTO;
 import adcsistemas.loja_comprebem.transportadora.dto.TransportadoraDTO;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 
 @RestController
@@ -111,15 +115,7 @@ public class VendaCompraLojaVirtualController {
 		/* Salva primeiro a venda e todos dados do cliente */
 		vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.saveAndFlush(vendaCompraLojaVirtual);
 
-		StatusRastreio statusRastreio = new StatusRastreio();
-		statusRastreio.setCentroDistruicao("Loja Local");
-		statusRastreio.setCidade("Local");
-		statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
-		statusRastreio.setEstado("Local");
-		statusRastreio.setStatus("Inicio Compra");
-		statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
-
-		statusRastreioRepository.save(statusRastreio);
+		
 
 		for (int i = 0; i < vendaCompraLojaVirtual.getItemVendaLojas().size(); i++) {
 			vendaCompraLojaVirtual.getItemVendaLojas().get(i)
@@ -1037,6 +1033,70 @@ public class VendaCompraLojaVirtualController {
 		
 		jdbcTemplate.execute("begin; update vd_cp_loja_virt set url_imp_etiqueta = '"+urlEtiqueta+"' where id = " + compraLojaVirtual.getId() + ";commit;");
 		//vendaCompraLojaVirtualRepository.updateUrlEtiqueta(urlEtiqueta, compraLojaVirtual.getId());
+		
+		
+		/**
+		 * Realiza a pesquisa de rastreio 
+		 */
+		
+		OkHttpClient clientR = new OkHttpClient().newBuilder().build();
+
+		okhttp3.MediaType mediaTypeR = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody bodyR = okhttp3.RequestBody.create(mediaTypeR, "{\n    \"orders\": [\n        \"\""+idEtiqueta+"\"\"\n    ]\n}\"");
+		okhttp3.Request requestR = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/shipment/tracking")
+		  .method("POST", bodyR)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "+ ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		okhttp3.Response responseR = clientR.newCall(requestR).execute();
+		
+		JsonNode jsonNodeR = new ObjectMapper().readTree(responseR.body().string());
+		
+		Iterator<JsonNode> iteratorR = jsonNodeR.iterator();
+		
+		String idEtiquetaR = "";
+		
+		while(iteratorR.hasNext()) {
+			JsonNode node = iteratorR.next();
+			if (node.get("tracking") != null) {
+				idEtiquetaR = node.get("id").asText();
+			}else {
+				idEtiquetaR = node.asText();
+			}
+			break;
+		
+		}
+		
+		StatusRastreio status = new StatusRastreio();
+		
+		List<StatusRastreio> rastreios = new ArrayList<StatusRastreio>();
+		
+		
+		
+		if (rastreios != null && idEtiqueta != idEtiquetaR) {
+			
+			StatusRastreio rastreio = new StatusRastreio();
+			
+
+			rastreio.setEmpresa(compraLojaVirtual.getEmpresa());
+			rastreio.setPessoafisica(compraLojaVirtual.getPessoaFisica());
+			rastreio.getPessoafisica().enderecoEntrega().getPessoa();
+			rastreio.getEmpresa().enderecoEntrega().getPessoa();
+			
+			rastreio.setId(idVenda);
+			rastreio.setVendaCompraLojaVirtual(compraLojaVirtual);
+			rastreio.setUrlRastreio("https://app.melhorrastreio.com.br/app/HTTPSWWWMELHORRASTREIOCOMBRRASTREIO" + idEtiqueta);
+			
+			statusRastreioRepository.saveAndFlush(rastreio);
+			
+		}else {
+			statusRastreioRepository.salvaUrlRastreio("https://app.melhorrastreio.com.br/app/HTTPSWWWMELHORRASTREIOCOMBRRASTREIO" + idEtiqueta , idVenda);
+		}
+			
 		
 		return new ResponseEntity<String>("Sucesso", HttpStatus.OK);
 		

@@ -59,7 +59,7 @@ public abstract class Pessoa implements Serializable {
 	private String tipoPessoa;
 
 	
-	@OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "pessoa", orphanRemoval = false, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Endereco> enderecos = new ArrayList<Endereco>();
 
 	@JsonIgnore

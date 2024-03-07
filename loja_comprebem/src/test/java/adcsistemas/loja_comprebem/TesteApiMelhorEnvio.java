@@ -10,11 +10,33 @@ public class TesteApiMelhorEnvio {
 
 	public static void main(String[] args) throws Exception {
 		
+		
+		/**
+		 * Realiza o Rastreio da Etiqueta
+		 */
+		
+		/*OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+		MediaType mediaType = MediaType.parse("application/json");
+		RequestBody body = RequestBody.create(mediaType, "{\"orders\":[\"9b80b093-fcb2-4862-b7e4-a436eb2612a0\"]}");
+		Request request = new Request.Builder()
+		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/shipment/tracking")
+		  .method("POST", body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer "+ ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SANDBOX)
+		  .addHeader("User-Agent", ApiTokenIntegracao.EMAIL_RESP)
+		  .build();
+
+		Response response = client.newCall(request).execute();
+		
+		System.out.println(response.body().string());*/
+		
 		/**
 		 * Listar transportadoras
 		 */
 		
-		OkHttpClient client = new OkHttpClient();
+		/*OkHttpClient client = new OkHttpClient();
 
 		Request request = new Request.Builder()
 		  .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SANDBOX +"api/v2/me/shipment/agencies?company=2&country=BR&state=SP&city=ROSANA")
@@ -26,7 +48,7 @@ public class TesteApiMelhorEnvio {
 		Response response = client.newCall(request).execute();
 		
 		
-		System.out.println(response.body().string());
+		System.out.println(response.body().string());*/
 		
 		
 		/**
