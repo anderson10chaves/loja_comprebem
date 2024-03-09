@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
+import adcsistemas.loja_comprebem.TokenMercadoPago.service.AccessTokenMercadoPagoService;
+import adcsistemas.loja_comprebem.TokenMercadoPago.service.MercadoPagoBoletoAPIservice;
 import adcsistemas.loja_comprebem.controller.PessoaController;
 import adcsistemas.loja_comprebem.enums.TipoEndereco;
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
@@ -17,16 +19,27 @@ import adcsistemas.loja_comprebem.model.Endereco;
 import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.repository.EmpresaRepository;
 
+
 @Profile("test")
 @SpringBootTest(classes = LojaComprebemApplication.class)
 public class TestePessoaUsuario {
-
+	
 	@Autowired
 	private PessoaController pessoaController;
 	
 	@Autowired
 	private EmpresaRepository pessoaRepository;
-
+	
+	@Autowired
+	private MercadoPagoBoletoAPIservice mercadoPagoBoletoAPIservice;
+	
+	@Test
+	public void TesteToken() throws Exception {
+		
+		mercadoPagoBoletoAPIservice.obterToken();
+	}
+	
+	
 	@Test
 	public void testCadPessoaJuridica() throws ExceptionLojaComprebem {
 
