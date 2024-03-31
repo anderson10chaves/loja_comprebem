@@ -45,6 +45,8 @@ import adcsistemas.loja_comprebem.model.dto.etiiqueta.EnvioEtiquetaDTO;
 import adcsistemas.loja_comprebem.model.dto.etiiqueta.ProductsEnvioEtiquetaDTO;
 import adcsistemas.loja_comprebem.model.dto.etiiqueta.TagsEnvioEtiquetaDTO;
 import adcsistemas.loja_comprebem.model.dto.etiiqueta.VolumesEnvioEtiquetaDTO;
+import adcsistemas.loja_comprebem.model.dto.transportadora.ConsultaApiFreteDTO;
+import adcsistemas.loja_comprebem.model.dto.transportadora.TransportadoraDTO;
 import adcsistemas.loja_comprebem.repository.ContaReceberRepository;
 import adcsistemas.loja_comprebem.repository.EnderecoRepository;
 import adcsistemas.loja_comprebem.repository.NotaFiscalVendaRepository;
@@ -52,8 +54,6 @@ import adcsistemas.loja_comprebem.repository.StatusRastreioRepository;
 import adcsistemas.loja_comprebem.repository.VendaCompraLojaVirtualRepository;
 import adcsistemas.loja_comprebem.service.SendEmailService;
 import adcsistemas.loja_comprebem.service.VendaService;
-import adcsistemas.loja_comprebem.transportadora.dto.ConsultaApiFreteDTO;
-import adcsistemas.loja_comprebem.transportadora.dto.TransportadoraDTO;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -549,7 +549,7 @@ public class VendaCompraLojaVirtualController {
 	 * @throws IOException
 	 */
 	@ResponseBody
-	@GetMapping(value = "statusEtiquetaPendente/{pendente}")
+	@PostMapping(value = "statusEtiquetaPendente/{pendente}")
 	public ResponseEntity<String> pendenteEtiqueta(@PathVariable String pendente) throws IOException {
 		
 		OkHttpClient client = new OkHttpClient();

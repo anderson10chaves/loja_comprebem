@@ -16,5 +16,8 @@ public interface FormaPagamentoRepository extends JpaRepository<FormaPagamento, 
 
 	@Query("select a from FormaPagamento a where upper(trim(a.descricao)) like %?1%")
 	List<FormaPagamento> buscarFormaPagamentoDesc(String desc);
+	
+	@Query(value = "select f from FormaPagamento f where f.empresa.id = ?1")
+	List<FormaPagamento> findAll(Long idEmpresa);
 
 }

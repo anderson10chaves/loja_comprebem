@@ -1,9 +1,13 @@
 package adcsistemas.loja_comprebem;
 
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
+
 import adcsistemas.loja_comprebem.utils.ValidaCnpj;
 import adcsistemas.loja_comprebem.utils.ValidaCpf;
 
-
+@Profile("test")
+@SpringBootTest(classes = LojaComprebemApplication.class)
 public class TesteCPFCNPJ {
 
 	
