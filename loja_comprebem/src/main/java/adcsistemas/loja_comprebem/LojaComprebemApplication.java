@@ -14,6 +14,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 
 @SpringBootApplication
@@ -23,7 +27,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = {"adcsistemas.*"})
 @EnableJpaRepositories(basePackages = {"adcsistemas.loja_comprebem.repository"})
 @EnableTransactionManagement
-public class LojaComprebemApplication implements AsyncConfigurer {
+@EnableWebMvc
+public class LojaComprebemApplication implements AsyncConfigurer, WebMvcConfigurer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LojaComprebemApplication.class, args);
@@ -33,6 +38,17 @@ public class LojaComprebemApplication implements AsyncConfigurer {
 		
 	}
 	
+	@Bean
+	public ViewResolver viewResolver() {
+		
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		
+		viewResolver.setPrefix("classpath:templates/");
+		viewResolver.setSuffix("html");
+		
+		return viewResolver;
+	}
+ 	
 
 	@Override
 	@Bean

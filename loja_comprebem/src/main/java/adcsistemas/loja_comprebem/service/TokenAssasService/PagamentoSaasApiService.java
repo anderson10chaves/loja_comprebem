@@ -528,8 +528,6 @@ public class PagamentoSaasApiService  {
 		}else {
 			return null;
 		}
-	}
-	
-	
+	}	
 
 }

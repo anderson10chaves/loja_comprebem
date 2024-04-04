@@ -3,7 +3,8 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pagamento</title>
 
 
 <!-- Latest compiled and minified CSS -->
@@ -14,6 +15,8 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
@@ -27,16 +30,16 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script> 
 
 </head>
-<body>
 
 <div class="container">
+	
 
     <form style="padding-top: 20px; padding-bottom: 20px" id="formcheckout">
      <input type="hidden" th:value="${venda.id}" id="idVendaCampo">
     
        <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="nome">Nome:</label>
+            <label for="nome">Cliente:</label>
             <input th:value=${venda.pessoa.nome} type="text" class="form-control" readonly="readonly" id="nome" required="required" style="height: 40px;">
           </div>
           
@@ -46,15 +49,20 @@
           </div>
        </div>
        
-       <div class="form-row" id="linha1cartao">
+		
+		<div class="form-row" id="linha1cartao">
            <div class="form-group col-md-6">
               <label for="numerocartao">Número do cartão:</label>
+              
             <input type="text" placeholder="455.454.545454.5454544" class="form-control" id="numerocartao" required="required" style="height: 40px;">
            </div>
+	
+       
           
             <div class="form-group col-md-6">
               <label for="nomecartao">Nome como escrito no cartão:</label>
-            <input type="text" placeholder="joão da silva" class="form-control" id="nomecartao" required="required" style="height: 40px;">
+            <input type="text" placeholder="Ex: João da Silva" class="form-control" id="nomecartao" required="required" style="height: 40px;">
+           
            </div> 
        </div>
        
@@ -107,7 +115,7 @@
            </div>
            <div class="form-group col-md-4">
            <label for="cvv">Código de segurança ou CVV:</label>
-            <input type="text" style="height: 40px;" placeholder="380" class="form-control" id="cvv" required="required">
+            <input type="text" style="height: 40px;" placeholder="000" class="form-control" id="cvv" required="required">
            </div> 
            
        </div>
@@ -150,15 +158,15 @@
         </div>
         
         <div class="form-row" id="divendereco2">
+			
+			<div class="form-group col-md-6">
+             <label for="cidade">Cidade:</label>
+            <input type="text" style="height: 40px;" placeholder="São Paulo" class="form-control" id="cidade" required="required">
+          </div>
         
           <div class="form-group col-md-6">
              <label for="estado">Estado:</label>
-            <input type="text" style="height: 40px;" placeholder="PR" class="form-control" id="estado" required="required">
-          </div>
-          
-         <div class="form-group col-md-6">
-             <label for="cidade">Cidade:</label>
-            <input type="text" style="height: 40px;" placeholder="Maringá" class="form-control" id="cidade" required="required">
+            <input type="text" style="height: 40px;" placeholder="SP" class="form-control" id="estado" required="required">
           </div>
         </div>
         
@@ -170,33 +178,33 @@
         
        <div class="form-row">
          <div class="form-group col-md-6">
-           <span id="valorParaCompra" style="width: 100%;height: 30px; font-size: 19px;" th:text="@{'TOTAL R$: ' + ${venda.valorTotal}}">TOTAL R$:</span>
+           <span id="valorParaCompra" style="width: 100%;height: 30px; font-size: 19px; color: darkblue;" th:text="@{'TOTAL R$: ' + ${venda.valorTotal}}">TOTAL R$:</span>
          </div>
          <div class="form-group col-md-6">
-           <span id="valorParaDesc" style="width: 100%;height: 30px; font-size: 19px;" th:text="@{'DESC. R$: ' + ${venda.valorDesconto}}">DESC. R$:</span>
+           <span id="valorParaDesc" style="width: 100%;height: 30px; font-size: 19px; color: red;" th:text="@{'DESC. R$: ' + ${venda.valorDesconto}}">DESC. R$:</span>
          </div>
         </div>
         
        <div class="form-row">
          <div class="form-group col-md-6">
-           <span id="valorFrete" style="width: 100%;height: 30px; font-size: 19px;" th:text="@{'FRETE R$: ' + ${venda.valorFrete}}">FRETE R$:</span>
+           <span id="valorFrete" style="width: 100%;height: 30px; font-size: 19px; color: yellowgreen;" th:text="@{'FRETE R$: ' + ${venda.valorFrete}}">FRETE R$:</span>
          </div>
         </div>
         
-        <hr width="96%" style="color: #726868;border-top: 1px solid #726868;">
+        <hr width="100%" style="color: #926559;border-top: 1px solid #926868;">
         
         <div class="form-row">
             <div class="form-group col-md-6" style="margin-top: 8px;">
-             <label>Itens adicionados</label>
+             <label>Itens Adicionados:</label>
+           
               <div th:each="p : ${venda.itemVendaLoja}">
-                 <span style="width: 100%; height: 15px; font-size: 11px;" th:text="@{${p.produto.nome} + ' - Qtd: ' + ${p.quantidade}}"></span>
+                 <span style="width: 100%; height: 18px; font-size: 18px;" th:text="@{${p.produto.nome} + ' - Qtd: ' + ${p.quantidade}}"></span>
               </div>
             </div>
         </div>
        
     </form>
 </div>
-
 
 
 		
@@ -294,45 +302,7 @@
 	  var estado = $('#estado').val();
 	  var cidade = $('#cidade').val();
 	  
-	  
-	  if(cidade.trim() == ''){
-		  alert('Informe a Cidade de cobrança do cartão de crédito.');
-		  return;
-	  }
-	  
-	  
-	  if(estado.trim() == ''){
-		  alert('Informe o Estado de cobrança do cartão de crédito.');
-		  return;
-	  }
-	  
-	  if(numero.trim() == ''){
-		  alert('Informe a Número de cobrança do cartão de crédito.');
-		  return;
-	  }
-	  
-	  if(rua.trim() == ''){
-		  alert('Informe a RUA de cobrança do cartão de crédito.');
-		  return;
-	  }
-	  
-	  
-	  if(cep.trim() == ''){
-		  alert('Informe CEP de cobrança do cartão de crédito.');
-		  return;
-	  }
-	  
-	  
-	  if(cvv.trim() == ''){
-		  alert('Informe CVV do cartão de crédito.');
-		  return;
-	  }
-	  
-	  
-	  if(mesvalidade.trim() == ''){
-		  alert('Informe mês de válidade do cartão de crédito.');
-		  return;
-	  }
+	
 	  
 	  if(numerocartao.trim() == ''){
 		  alert('Informe o número do cartão de crédito.');
@@ -349,7 +319,44 @@
 		  return;
 	  }
 	  
+	  if(mesvalidade.trim() == ''){
+		  alert('Informe mês de válidade do cartão de crédito.');
+		  return;
+	  }
 	  
+	  if(cvv.trim() == ''){
+		  alert('Informe CVV do cartão de crédito.');
+		  return;
+	  }
+	  
+	  if(cep.trim() == ''){
+		  alert('Informe CEP de cobrança do cartão de crédito.');
+		  return;
+	  }
+	  
+	  if(rua.trim() == ''){
+		  alert('Informe a RUA de cobrança do cartão de crédito.');
+		  return;
+	  }
+	  
+	  if(numero.trim() == ''){
+		  document.getElementById(alert);
+		  alert('Informe a Número de cobrança do cartão de crédito.');
+		  return;
+	  }
+	  
+	  if(cidade.trim() == ''){
+		  alert('Informe a Cidade de cobrança do cartão de crédito.');
+		  return;
+	  }
+	  
+	  
+	  if(estado.trim() == ''){
+		  alert('Informe o Estado de cobrança do cartão de crédito.');
+		  return;
+	  }
+	  
+	  	  
 	  var cardData = {
 			cardNumber: numerocartao.replaceAll('.',""),
 			holderName: nomecartao,
@@ -449,8 +456,7 @@
   }      
 
     </script>	
+</script>
 
 
-
-</body>
 </html>

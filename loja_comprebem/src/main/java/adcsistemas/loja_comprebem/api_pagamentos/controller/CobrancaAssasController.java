@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import adcsistemas.loja_comprebem.model.CobrancaEnvio.dto.CobrancaPagamentoEnvioDTO;
 import adcsistemas.loja_comprebem.service.TokenAssasService.AccessTokenAsaasService;
 import adcsistemas.loja_comprebem.service.TokenAssasService.PagamentoSaasApiService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 public class CobrancaAssasController {

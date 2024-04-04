@@ -32,8 +32,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 		.disable().authorizeRequests().antMatchers("/").permitAll()
 		.antMatchers("/index","/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**").permitAll()
-		.antMatchers(HttpMethod.POST, "/requisicaoasass/**", "/notificacaoapiv2", "notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas").permitAll()
-		.antMatchers(HttpMethod.GET, "/requisicaoasass/**", "/notificacaoapiv2", "notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas").permitAll()
+		.antMatchers(HttpMethod.POST, "/requisicaoasass/**",  "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas").permitAll()
+		.antMatchers(HttpMethod.GET, "/requisicaoasass/**", "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas").permitAll()
 		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 		.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -52,8 +52,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().
-		 antMatchers(HttpMethod.GET, "/requisicaoasass/**", "/notificacaoapiv2", "notificacaoapiassas","/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas")
-		   .antMatchers(HttpMethod.POST,"/requisicaoasass/**", "/notificacaoapiv2", "notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas");
+		 antMatchers(HttpMethod.GET, "/requisicaoasass/**",  "/notificacaoapiassas","/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas")
+		   .antMatchers(HttpMethod.POST,"/requisicaoasass/**", "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas");
 		/* Ingnorando URL no momento para nao autenticar */
 	}
 

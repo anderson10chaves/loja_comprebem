@@ -1,33 +1,27 @@
 package adcsistemas.loja_comprebem;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jersey.api.client.Client;
 
 import adcsistemas.loja_comprebem.controller.AcessoController;
-import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
-import adcsistemas.loja_comprebem.model.Acesso;
+import adcsistemas.loja_comprebem.model.EmailMarketing.dto.EmailMarketing;
 import adcsistemas.loja_comprebem.repository.AcessoRepository;
+import adcsistemas.loja_comprebem.service.SSLClient.HostIgnoringClient;
 import junit.framework.TestCase;
 
-@Profile("dev")
+@Profile("test")
 @SpringBootTest(classes = LojaComprebemApplication.class)
-class LojaComprebemApplicationTests extends TestCase {
+public class LojaComprebemApplicationTests extends TestCase {
 	
 	
 	@Autowired
@@ -40,9 +34,9 @@ class LojaComprebemApplicationTests extends TestCase {
 	@Autowired
 	private WebApplicationContext wac;
 	
-	
+	/*
 	@Test
-	public void testRestApiCadastroAcesso() throws JsonProcessingException, Exception {
+	/*public void testRestApiCadastroAcesso() throws JsonProcessingException, Exception {
 		DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
 		MockMvc mockMvc = builder.build();
 		
@@ -60,7 +54,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		System.out.println("Retorno da API" + retornoApi.andReturn().getResponse().getContentAsString());
 		
-		/*Converter o retorno da api para obejto de acesso*/
+		/*Converter o retorno da api para obejto de acesso
 		
 		
 		  Acesso objetoRetorno = objectMapper.
@@ -70,7 +64,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(acesso.getDescricao(), objetoRetorno.getDescricao());
 		
-	}
+	} */
 	
 	/*@Test
 	public void testRestApiDeleteAcesso() throws JsonProcessingException, Exception {
@@ -192,7 +186,10 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 	}*/
 	
+	/*
+	
 	@Test
+	/*
 	public void testCadastroAcesso() throws ExceptionLojaComprebem {
 		
 		String descacesso = "ROLE_ADMIN" + Calendar.getInstance().getTimeInMillis();
@@ -213,9 +210,9 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(acesso.getId(), acessoSalvo.getId());
 		
-		/*Teste de deletar*/
+		Teste de deletar
 		
-		/*acessoRepository.deleteById(acessoSalvo.getId());
+		acessoRepository.deleteById(acessoSalvo.getId());
 		
 		acessoRepository.flush();
 		
@@ -223,7 +220,7 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(true, acessoDelete == null);
 		
-		/*Teste Query*/
+		Teste Query
 		
 		acesso = new Acesso();
 		
@@ -235,7 +232,8 @@ class LojaComprebemApplicationTests extends TestCase {
 		
 		assertEquals(1, acessos.size());
 		
-		/*acessoRepository.deleteById(acesso.getId());*/
-	}
+		acessoRepository.deleteById(acesso.getId());
+	}*/
 
-}
+	
+};

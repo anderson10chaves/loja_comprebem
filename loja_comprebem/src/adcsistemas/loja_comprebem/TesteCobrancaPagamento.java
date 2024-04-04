@@ -1,6 +1,6 @@
 package adcsistemas.loja_comprebem;
 
-import org.junit.jupiter.api.Test;
+import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
@@ -9,7 +9,7 @@ import adcsistemas.loja_comprebem.model.CobrancaEnvio.dto.CobrancaPagamentoEnvio
 import adcsistemas.loja_comprebem.service.TokenAssasService.PagamentoSaasApiService;
 
 
-@Profile("test")
+@Profile("dev")
 @SpringBootTest(classes = LojaComprebemApplication.class)
 public class TesteCobrancaPagamento {
 	

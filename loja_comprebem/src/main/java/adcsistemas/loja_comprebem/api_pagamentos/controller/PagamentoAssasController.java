@@ -1,5 +1,6 @@
 package adcsistemas.loja_comprebem.api_pagamentos.controller;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -11,11 +12,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -44,9 +45,11 @@ import adcsistemas.loja_comprebem.service.SSLClient.HostIgnoringClient;
 import adcsistemas.loja_comprebem.service.TokenAssasService.PagamentoSaasApiService;
 import adcsistemas.loja_comprebem.utils.ValidaCpf;
 
-@RestController
-public class PagamentoAssasController {
+@Controller
+public class PagamentoAssasController implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Autowired
 	private VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository;
 	
@@ -59,7 +62,7 @@ public class PagamentoAssasController {
 	@Autowired
 	private VendaService vendaService;
 	
-	@RequestMapping(method = RequestMethod.GET, value = "pagamento/{idVendaCompra}")
+	@RequestMapping(method = RequestMethod.GET, value = "/pagamento/{idVendaCompra}")
 	public ModelAndView pagamento(@PathVariable(value = "idVendaCompra",
 					required = false) String idVendaCompra) {
 		

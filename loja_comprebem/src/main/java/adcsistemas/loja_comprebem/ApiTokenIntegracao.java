@@ -14,6 +14,10 @@ public class ApiTokenIntegracao {
 	
 	public static final String EMAIL_RESP = "andchaves10@icloud.com";
 	
+	public static final String TOKEN_GET_RESPONSE_EMAIL = "api-key esh3kev4uzrlp17upenbccpbqsbjivyp";
+	
+	public static final String URL_GET_RESPONSE_EMAIL = "https://api.getresponse.com/v3/";
+	
 	
 	
 	/**
