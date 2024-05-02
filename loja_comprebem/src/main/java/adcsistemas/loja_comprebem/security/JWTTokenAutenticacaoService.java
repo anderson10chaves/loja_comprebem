@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import adcsistemas.loja_comprebem.ApiTokenIntegracao;
 import adcsistemas.loja_comprebem.ApplicationContextLoad;
 import adcsistemas.loja_comprebem.model.Usuario;
 import adcsistemas.loja_comprebem.repository.UsuarioRepository;
@@ -40,7 +41,7 @@ public class JWTTokenAutenticacaoService {
 		String token = TOKEN_PREFIX + " " + JWT;
 
 		response.addHeader(HEADER_STRING, token);
-
+		
 		liberacaoCors(response);
 
 		response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
@@ -97,4 +98,5 @@ public class JWTTokenAutenticacaoService {
 			response.addHeader("Access-Control-Allow-Methods", "*");
 		}
 	}
+	
 }

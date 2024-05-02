@@ -1,12 +1,15 @@
 package adcsistemas.loja_comprebem.controller;
 
 import java.util.List;
+import java.util.UUID;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,15 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import adcsistemas.loja_comprebem.enums.TipoPessoa;
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
+import adcsistemas.loja_comprebem.model.Empresa;
 import adcsistemas.loja_comprebem.model.Endereco;
 import adcsistemas.loja_comprebem.model.PessoaFisica;
-import adcsistemas.loja_comprebem.model.Empresa;
+import adcsistemas.loja_comprebem.model.Usuario;
 import adcsistemas.loja_comprebem.model.dto.CepDTO;
 import adcsistemas.loja_comprebem.model.dto.ConsultaCnpjDTO;
+import adcsistemas.loja_comprebem.model.dto.ObjetoMsgEmailRecSenha;
+import adcsistemas.loja_comprebem.repository.EmpresaRepository;
 import adcsistemas.loja_comprebem.repository.EnderecoRepository;
 import adcsistemas.loja_comprebem.repository.PessoaFisicaRepository;
-import adcsistemas.loja_comprebem.repository.EmpresaRepository;
+import adcsistemas.loja_comprebem.repository.UsuarioRepository;
 import adcsistemas.loja_comprebem.service.PessoaUserService;
+import adcsistemas.loja_comprebem.service.SendEmailService;
 import adcsistemas.loja_comprebem.service.ServiceContagemAcessoApi;
 import adcsistemas.loja_comprebem.utils.ValidaCnpj;
 import adcsistemas.loja_comprebem.utils.ValidaCpf;
@@ -46,7 +53,13 @@ public class PessoaController {
 	
 	@Autowired
 	private ServiceContagemAcessoApi serviceContagemAcessoApi;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
+	@Autowired
+	private SendEmailService sendEmailService;
+	
 	@ResponseBody
 	@GetMapping(value = "/pesquisaPorNomePJ/{nome}")
 	public ResponseEntity<List<Empresa>> pesquisaPorNomePJ(@PathVariable("nome") String nome) {
@@ -276,6 +289,33 @@ public class PessoaController {
 		empresa = pessoaUserService.salvarEmpresa(empresa);
 
 		return new ResponseEntity<Empresa>(empresa, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@PostMapping(value = "/recuperarAcesso")
+	public ResponseEntity<ObjetoMsgEmailRecSenha> recuperarSenha(@RequestBody String login) throws Exception, MessagingException {
+		
+		Usuario usuario = usuarioRepository.findUserByLogin(login);
+		
+		if(usuario == null) {
+			return (ResponseEntity<ObjetoMsgEmailRecSenha>) new ResponseEntity<ObjetoMsgEmailRecSenha>(new ObjetoMsgEmailRecSenha("Usuário não encontrado"), HttpStatus.OK);
+		}
+		
+		String senha = UUID.randomUUID().toString();
+		
+		senha = senha.substring(0, 6);
+		
+		String senhaCriptografada = new BCryptPasswordEncoder().encode(senha);
+		
+		usuarioRepository.updateSenhaUser(senhaCriptografada, login);
+		
+		StringBuilder msgEmail = new StringBuilder();
+		msgEmail.append("<h2>Loja CompreBem<h2>");
+		msgEmail.append("<b>Senha nova : </b>").append(senha);
+		sendEmailService.enviarEmailHtml("Sua nova senha foi gerada!", msgEmail.toString(), usuario.getPessoa().getEmail());
+		
+		
+		return (ResponseEntity<ObjetoMsgEmailRecSenha>) new ResponseEntity<ObjetoMsgEmailRecSenha>( new ObjetoMsgEmailRecSenha("Senha enviada para seu e-mail de cadastro!"), HttpStatus.OK);
 	}
 
 	@ResponseBody

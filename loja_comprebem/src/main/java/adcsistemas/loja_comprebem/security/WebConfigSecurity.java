@@ -30,11 +30,11 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-		.disable().authorizeRequests().antMatchers("/").permitAll()
-		.antMatchers("/index","/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**").permitAll()
-		.antMatchers(HttpMethod.POST, "/requisicaoasass/**",  "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas").permitAll()
-		.antMatchers(HttpMethod.GET, "/requisicaoasass/**", "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas").permitAll()
-		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+		.disable().cors().and().authorizeRequests().antMatchers("/").permitAll()
+		.antMatchers("/index", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**").permitAll()
+		.antMatchers(HttpMethod.POST, "/requisicaoasass/**",  "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas", "**/recuperarAcesso").permitAll()
+		.antMatchers(HttpMethod.GET,  "/requisicaoasass/**", "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**", "**/requisicaoasass/notificacaoapiassas", "**/recuperarAcesso").permitAll()
+		.antMatchers(HttpMethod.OPTIONS, "*").permitAll()
 		.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 		.and().addFilterBefore(new JWTLoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
@@ -52,8 +52,10 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().
-		 antMatchers(HttpMethod.GET, "/requisicaoasass/**",  "/notificacaoapiassas","/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas")
-		   .antMatchers(HttpMethod.POST,"/requisicaoasass/**", "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**","classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas");
+		 antMatchers(HttpMethod.GET, "/index", "/requisicaoasass/**",  "/notificacaoapiassas","/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**",
+				 "classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas", "/recuperarAcesso")
+		   .antMatchers(HttpMethod.POST,"/index", "/requisicaoasass/**", "/notificacaoapiassas", "/pagamento/**","/resources/**","/static/**","/templates/**","classpath:/static/**",
+				   "classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas", "/recuperarAcesso");
 		/* Ingnorando URL no momento para nao autenticar */
 	}
 

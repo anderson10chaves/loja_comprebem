@@ -11,28 +11,34 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
+@Component
 public class JwtApiAutenticacaoFilter extends GenericFilterBean {
+
+	
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+    
+		
+   
+	
+	try {
 
-		try {
+		Authentication authentication = new JWTTokenAutenticacaoService()
+				.getAuthentication((HttpServletRequest) request, (HttpServletResponse) response);
 
-			Authentication authentication = new JWTTokenAutenticacaoService()
-					.getAuthentication((HttpServletRequest) request, (HttpServletResponse) response);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+		chain.doFilter(request, response);
 
-			chain.doFilter(request, response);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.getWriter().write(
-					"Ocorreu um erro no sistema, comunique o administrador / desenvolvedor!: \n\n" + e.getMessage());
-		}
+	} catch (Exception e) {
+		e.printStackTrace();
+		response.getWriter().write(
+				"Ocorreu um erro no sistema, comunique o administrador / desenvolvedor!: \n\n" + e.getMessage());
 	}
-
+}
 }

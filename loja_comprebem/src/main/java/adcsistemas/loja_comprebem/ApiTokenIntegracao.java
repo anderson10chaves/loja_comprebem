@@ -18,6 +18,14 @@ public class ApiTokenIntegracao {
 	
 	public static final String URL_GET_RESPONSE_EMAIL = "https://api.getresponse.com/v3/";
 	
+	/**
+	 * URL de acesso ao modo em dev ou prod
+	 */
+	
+	public static final String ORIGIN_SERVER = "https://api.lojavirtualcomprebem.com.br/";
+	
+	public static final String ORIGIN_LOCALHOST = "http://localhost:8080/lojacomprebem/login";
+	
 	
 	
 	/**

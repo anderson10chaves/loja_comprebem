@@ -12,9 +12,12 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -66,4 +69,27 @@ public class LojaComprebemApplication implements AsyncConfigurer, WebMvcConfigur
 	}
 	
 
+	//@Override
+	//public void addCorsMappings(CorsRegistry registry) {
+		
+	//	registry.addMapping("*")
+	//	.allowedOrigins("*")
+	//	.allowedHeaders("*")
+	//	.allowedMethods("*")
+	//	.exposedHeaders("*");
+		
+		//WebMvcConfigurer.super.addCorsMappings(registry);
+	//}
+	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+	        CorsConfiguration configuration = new CorsConfiguration();
+	        configuration.setAllowCredentials(true);
+	        configuration.addAllowedOrigin("http://localhost:4200"); // acesso local
+	        configuration.addAllowedHeader("*");
+	        configuration.addAllowedMethod("*");
+	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	        source.registerCorsConfiguration("/**", configuration);
+	        return source;
+	    }
 }
