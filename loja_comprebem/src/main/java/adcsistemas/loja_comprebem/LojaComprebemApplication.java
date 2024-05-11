@@ -17,7 +17,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -68,6 +67,8 @@ public class LojaComprebemApplication implements AsyncConfigurer, WebMvcConfigur
 		return executor;
 	}
 	
+	
+	
 
 	//@Override
 	//public void addCorsMappings(CorsRegistry registry) {
@@ -85,9 +86,10 @@ public class LojaComprebemApplication implements AsyncConfigurer, WebMvcConfigur
 	CorsConfigurationSource corsConfigurationSource() {
 	        CorsConfiguration configuration = new CorsConfiguration();
 	        configuration.setAllowCredentials(true);
-	        configuration.addAllowedOrigin("http://localhost:4200"); // acesso local
+	        configuration.addAllowedOrigin("http://localhost:4200");// acesso local
 	        configuration.addAllowedHeader("*");
 	        configuration.addAllowedMethod("*");
+	        configuration.addAllowedOriginPattern("*");
 	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	        source.registerCorsConfiguration("/**", configuration);
 	        return source;

@@ -2,6 +2,10 @@ package adcsistemas.loja_comprebem.service;
 
 import java.util.Calendar;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,13 +40,29 @@ public class PessoaUserService {
 	@Autowired
 	private SendEmailService sendEmailService;
 
+	@PersistenceContext
+	private EntityManager entityManager;
+	
+	public Boolean possuiAcesso(String username, String acessos) {
+		
+		String sql= " select count(1) > 0 from usuarios_acesso as ua "
+				+ "inner join usuario as u on u.id = ua.usuario_id "
+				+ "inner join acesso as a on a.id = ua.acesso_id "
+			+ "where u.login = '"+username+"' "
+			+ "and a.descricao in (" +acessos+ ")";
+		
+		Query query = entityManager.createNativeQuery(sql);
+		
+		return Boolean.valueOf(query.getSingleResult().toString());
+	}
+	
 	public Empresa salvarEmpresa(Empresa empresa) {
 
 		// pessoaJuridica = pessoaRepository.save(pessoaJuridica);
 
 		for (int i = 0; i < empresa.getEnderecos().size(); i++) {
 			empresa.getEnderecos().get(i).setEmpresa(empresa);
-			empresa.getEnderecos().get(i).setEmpresa(empresa);;
+			empresa.getEnderecos().get(i).setEmpresa(empresa);
 		}
 
 		empresa = pessoaRepository.save(empresa);

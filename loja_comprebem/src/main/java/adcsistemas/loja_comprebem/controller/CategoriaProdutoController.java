@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.CategoriaProduto;
 import adcsistemas.loja_comprebem.repository.CategoriaProdutoRepository;
@@ -44,24 +46,24 @@ public class CategoriaProdutoController {
 	
 	@ResponseBody
 	@PostMapping(value = "/deleteCategoriaProduto")
-	public ResponseEntity<?> deleteCategoriaProduto(@RequestBody CategoriaProduto categoriaProduto) {
+	public ResponseEntity<String> deleteCategoriaProduto(@RequestBody CategoriaProduto categoriaProduto) throws ExceptionLojaComprebem {
 		
 		if(categoriaProdutoRepository.findById(categoriaProduto.getId()).isPresent() == false) {
-			return new ResponseEntity<>("Categoria Produto já removida", HttpStatus.OK);
+			throw new ExceptionLojaComprebem("Categoria Produto removida");
 		}
 
 		categoriaProdutoRepository.deleteById(categoriaProduto.getId());
 
-		return new ResponseEntity<>("Categoria Produto excluído com sucesso", HttpStatus.OK);
+		return new ResponseEntity<String>(new Gson().toJson("Categoria Produto excluído com sucesso"), HttpStatus.OK);
 	}
 
 	@ResponseBody
 	@DeleteMapping(value = "/deleteCategoriaProdutoId/{id}")
-	public ResponseEntity<?> deleteCategoriaProdutoId(@PathVariable("id") Long id) {
+	public ResponseEntity<?> deleteCategoriaProdutoId(@PathVariable("id") Long id) throws ExceptionLojaComprebem {
 		
 		if(categoriaProdutoRepository.findById(id).isPresent() == false) {
-			return new ResponseEntity<>("Categoria Produto já foi removida", HttpStatus.OK);
-		};
+			throw new ExceptionLojaComprebem("Categoria Produto foi removida");
+		}
 
 		categoriaProdutoRepository.deleteById(id);
 
@@ -70,9 +72,9 @@ public class CategoriaProdutoController {
 
 	@ResponseBody
 	@GetMapping(value = "/pesquisaCategoriaProdutosId/{id}")
-	public ResponseEntity<?> pesquisaCatedoriaProdutosId(@PathVariable("id") Long id) throws ExceptionLojaComprebem {
+	public ResponseEntity<CategoriaProduto> pesquisaCatedoriaProdutosId(@PathVariable("id") Long id) throws ExceptionLojaComprebem {
 
-		CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id).orElse(null);
+		CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id).get();
 
 		if (categoriaProduto == null) {
 			throw new ExceptionLojaComprebem("Categoria Produto não encontrado com código: " + id);
@@ -80,12 +82,31 @@ public class CategoriaProdutoController {
 
 		return new ResponseEntity<CategoriaProduto>(categoriaProduto, HttpStatus.OK);
 	}
+	
+	@ResponseBody
+	@GetMapping(value = "/pesquisaCategoriaProdutoDescEmpresa/{nomeDesc}/{empresa}")
+	public ResponseEntity<List<CategoriaProduto>> pesquisaCategoriaProdutoNomeDescEmpresa(@PathVariable("nomeDesc") String nomeDesc,
+			@PathVariable("empresa") Long empresa) {
+
+		List<CategoriaProduto> categoriaProdutos = categoriaProdutoRepository.pesquisaCategoriaProdutoNomeDescEmpresa(nomeDesc.toUpperCase(), empresa);
+
+		return new ResponseEntity<List<CategoriaProduto>>(categoriaProdutos, HttpStatus.OK);
+	}
 
 	@ResponseBody
 	@GetMapping(value = "/pesquisaCategoriaProdutoDesc/{nomeDesc}")
-	public ResponseEntity<List<CategoriaProduto>> pesquisaCategoriaProdutoNomeDesc(@PathVariable("nomeDesc") String nomeDesc) {
+	public ResponseEntity<List<CategoriaProduto>> pesquisaCategoriaProdutoDesc(@PathVariable("nomeDesc") String nomeDesc) {
 
-		List<CategoriaProduto> categoriaProdutos = categoriaProdutoRepository.pesquisaCategoriaProdutoNomeDesc(nomeDesc.trim().toUpperCase());
+		List<CategoriaProduto> categoriaProdutos = categoriaProdutoRepository.pesquisaCategoriaProdutoNomeDesc(nomeDesc.toUpperCase());
+
+		return new ResponseEntity<List<CategoriaProduto>>(categoriaProdutos, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/listarCategoriaProdutoCodEmp/{codEmpresa}")
+	public ResponseEntity<List<CategoriaProduto>> listarCategoriaProdutoCodEmp(@PathVariable("codEmpresa") Long codEmpresa) {
+
+		List<CategoriaProduto> categoriaProdutos = categoriaProdutoRepository.findAll(codEmpresa);
 
 		return new ResponseEntity<List<CategoriaProduto>>(categoriaProdutos, HttpStatus.OK);
 	}

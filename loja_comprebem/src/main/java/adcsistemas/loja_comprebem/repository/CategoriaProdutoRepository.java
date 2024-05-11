@@ -13,9 +13,20 @@ import adcsistemas.loja_comprebem.model.CategoriaProduto;
 @Transactional
 public interface CategoriaProdutoRepository extends JpaRepository<CategoriaProduto, Long> {
 
+	@Query("select a from CategoriaProduto a where a.empresa.id = ?1")
+	List<CategoriaProduto> pesquisaCategoriaProdutosId(Long id);
+	
 	@Query("select a from CategoriaProduto a where upper(trim(a.nomeDesc)) like %?1%")
 	List<CategoriaProduto> pesquisaCategoriaProdutoNomeDesc(String nomeDesc);
 	
 	@Query(nativeQuery = true, value = "select count(1) > 0 from categoria_produto where upper(trim(nome_desc)) = upper(trim(?1))")
 	public boolean existeCategoriaProduto(String nomeCategoria);
+
+	@Query("select a from CategoriaProduto a where a.empresa.id = ?1")
+	List<CategoriaProduto> findAll(Long codEmpresa);
+
+	@Query("select a from CategoriaProduto a where upper(trim(a.nomeDesc)) like %?1% and a.empresa.id = ?2")
+	List<CategoriaProduto> pesquisaCategoriaProdutoNomeDescEmpresa(String upperCase, Long empresa);
+
+	
 }

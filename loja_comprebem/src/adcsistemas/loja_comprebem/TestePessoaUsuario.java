@@ -1,11 +1,18 @@
 package adcsistemas.loja_comprebem;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
 import adcsistemas.loja_comprebem.controller.PessoaController;
+import adcsistemas.loja_comprebem.enums.TipoEndereco;
+import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
+import adcsistemas.loja_comprebem.model.Empresa;
+import adcsistemas.loja_comprebem.model.Endereco;
+import adcsistemas.loja_comprebem.model.PessoaFisica;
 import adcsistemas.loja_comprebem.repository.EmpresaRepository;
 import adcsistemas.loja_comprebem.service.TokenAssasService.PagamentoSaasApiService;
 
@@ -31,14 +38,14 @@ public class TestePessoaUsuario {
 	}
 	
 
-	/*@Test
+	@Test
 	public void TesteToken() throws Exception {
 		
 		mercadoPagoBoletoAPIservice.obterToken();
 	}
 	
 	
-	/*@Test
+	@Test
 	public void testCadPessoaJuridica() throws ExceptionLojaComprebem {
 
 		Empresa empresa = new Empresa();
@@ -151,6 +158,6 @@ public class TestePessoaUsuario {
 			}
 			assertEquals(2, pessoaFisica.getEnderecos().size());
 		 
-	}*/
+	}
 
 }

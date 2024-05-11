@@ -58,7 +58,9 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 				   "classpath:/resources/**","classpath:/templates/**","/webjars/**","/WEB-INF/classes/static/**", "**/requisicaoasass/notificacaoapiassas", "/recuperarAcesso");
 		/* Ingnorando URL no momento para nao autenticar */
 	}
-
+	
 
 	}
+
+
 

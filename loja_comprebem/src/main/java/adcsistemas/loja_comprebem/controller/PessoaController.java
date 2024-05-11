@@ -292,6 +292,17 @@ public class PessoaController {
 	}
 	
 	@ResponseBody
+	@GetMapping(value = "/possuiAcesso/{username}/{role}")
+	public ResponseEntity<Boolean> possuiAcesso(@PathVariable("username") String username, @PathVariable("role") String role) {
+		
+		String sqlRole = "'" + role.replaceAll(",", "', '") + "'";
+		
+		Boolean possuiAcesso = pessoaUserService.possuiAcesso(username, sqlRole);
+		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@ResponseBody
 	@PostMapping(value = "/recuperarAcesso")
 	public ResponseEntity<ObjetoMsgEmailRecSenha> recuperarSenha(@RequestBody String login) throws Exception, MessagingException {
 		

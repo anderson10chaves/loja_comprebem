@@ -43,8 +43,14 @@ public class JWTTokenAutenticacaoService {
 		response.addHeader(HEADER_STRING, token);
 		
 		liberacaoCors(response);
+		
+		Usuario usuario = ApplicationContextLoad.getApplicationContext()
+				.getBean(UsuarioRepository.class)
+				.findUserByLogin(username);
+		
+		System.out.println(usuario.getEmpresa().getId());
 
-		response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
+		response.getWriter().write("{\"Authorization\": \"" + token + "\", \"username\": \""+username+"\", \"empresa\": \""+usuario.getEmpresa().getId()+"\"}");
 	}
 
 	public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -59,11 +65,14 @@ public class JWTTokenAutenticacaoService {
 				String user = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(tokenLimpo).getBody().getSubject();
 
 				if (user != null) {
-					Usuario usuario = ApplicationContextLoad.getApplicationContext().getBean(UsuarioRepository.class)
+					Usuario usuario = ApplicationContextLoad.getApplicationContext()
+							.getBean(UsuarioRepository.class)
 							.findUserByLogin(user);
 
 					if (usuario != null) {
-						return new UsernamePasswordAuthenticationToken(usuario.getLogin(), usuario.getPassword(),
+						return new UsernamePasswordAuthenticationToken(
+								usuario.getLogin(), 
+								usuario.getPassword(),
 								usuario.getAuthorities());
 					}
 				}
