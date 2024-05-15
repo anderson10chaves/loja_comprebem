@@ -5,6 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -87,7 +91,7 @@ public class CategoriaProdutoController {
 	@GetMapping(value = "/pesquisaCategoriaProdutoDescEmpresa/{nomeDesc}/{empresa}")
 	public ResponseEntity<List<CategoriaProduto>> pesquisaCategoriaProdutoNomeDescEmpresa(@PathVariable("nomeDesc") String nomeDesc,
 			@PathVariable("empresa") Long empresa) {
-
+		
 		List<CategoriaProduto> categoriaProdutos = categoriaProdutoRepository.pesquisaCategoriaProdutoNomeDescEmpresa(nomeDesc.toUpperCase(), empresa);
 
 		return new ResponseEntity<List<CategoriaProduto>>(categoriaProdutos, HttpStatus.OK);
@@ -109,5 +113,25 @@ public class CategoriaProdutoController {
 		List<CategoriaProduto> categoriaProdutos = categoriaProdutoRepository.findAll(codEmpresa);
 
 		return new ResponseEntity<List<CategoriaProduto>>(categoriaProdutos, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/qtdPaginaCategoriaProduto/{idEmpresa}")
+	public ResponseEntity<Integer> qtdPagina(@PathVariable("idEmpresa") Long idEmpresa){
+		Integer qtdPagina = categoriaProdutoRepository.qtdPagina(idEmpresa);
+		
+		return new ResponseEntity<Integer>(qtdPagina, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/listaPaginaCatProduto/{idEmpresa}/{pagina}")
+	public ResponseEntity<List<CategoriaProduto>> page(@PathVariable("idEmpresa") Long idEmpresa,
+			@PathVariable("pagina") Integer pagina){
+		
+		Pageable pageable = PageRequest.of(pagina, 5, Sort.by("nomeDesc"));
+		
+		List<CategoriaProduto> lista = categoriaProdutoRepository.findPage(idEmpresa, pageable);
+		
+		return new ResponseEntity<List<CategoriaProduto>>(lista, HttpStatus.OK);
 	}
 }
