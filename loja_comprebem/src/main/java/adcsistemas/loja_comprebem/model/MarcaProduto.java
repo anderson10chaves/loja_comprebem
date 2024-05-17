@@ -51,7 +51,13 @@ public class MarcaProduto implements Serializable {
 		this.nomeDesc = nomeDesc;
 	}
 
-	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 
 	@Override
 	public int hashCode() {

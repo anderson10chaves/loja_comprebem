@@ -2,6 +2,7 @@ package adcsistemas.loja_comprebem.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,13 @@ public interface AcessoRepository extends JpaRepository<Acesso, Long> {
 
 	@Query("select a from Acesso a where upper(trim(a.descricao)) like %?1%")
 	List<Acesso> buscarAcessoDesc(String desc);
+	
+	@Query("select a from Acesso a where upper(trim(a.descricao)) like %?1% and a.empresa.id = ?2")
+	List<Acesso> buscarAcessoDescEmpresa(String descricao, Long empresa);
+	
+	@Query(value = "select a from Acesso a where a.empresa.id = ?1 ")
+	public List<Acesso>  findPage(Long idEmpresa, Pageable pageable);
+	
+	@Query(nativeQuery = true, value = "select cast (count(1) / 6 + 1 as integer) as qtdpagina from acesso where empresa_id = ?1")
+	public Integer qtdPagina(Long idEmpresa);
 }

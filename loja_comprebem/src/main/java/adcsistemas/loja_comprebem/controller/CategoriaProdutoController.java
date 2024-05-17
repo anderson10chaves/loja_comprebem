@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.CategoriaProduto;
+import adcsistemas.loja_comprebem.model.MarcaProduto;
 import adcsistemas.loja_comprebem.repository.CategoriaProdutoRepository;
 
 @RestController
@@ -76,9 +77,9 @@ public class CategoriaProdutoController {
 
 	@ResponseBody
 	@GetMapping(value = "/pesquisaCategoriaProdutosId/{id}")
-	public ResponseEntity<CategoriaProduto> pesquisaCatedoriaProdutosId(@PathVariable("id") Long id) throws ExceptionLojaComprebem {
+	public ResponseEntity<?> pesquisaCategoriaProdutosId(@PathVariable("id") Long id) throws ExceptionLojaComprebem {
 
-		CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id).get();
+		CategoriaProduto categoriaProduto = categoriaProdutoRepository.findById(id).orElse(null);
 
 		if (categoriaProduto == null) {
 			throw new ExceptionLojaComprebem("Categoria Produto não encontrado com código: " + id);
@@ -128,7 +129,7 @@ public class CategoriaProdutoController {
 	public ResponseEntity<List<CategoriaProduto>> page(@PathVariable("idEmpresa") Long idEmpresa,
 			@PathVariable("pagina") Integer pagina){
 		
-		Pageable pageable = PageRequest.of(pagina, 5, Sort.by("nomeDesc"));
+		Pageable pageable = PageRequest.of(pagina, 6, Sort.by("nomeDesc"));
 		
 		List<CategoriaProduto> lista = categoriaProdutoRepository.findPage(idEmpresa, pageable);
 		
