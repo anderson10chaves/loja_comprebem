@@ -15,7 +15,7 @@ import adcsistemas.loja_comprebem.model.Acesso;
 public interface AcessoRepository extends JpaRepository<Acesso, Long> {
 
 	@Query("select a from Acesso a where upper(trim(a.descricao)) like %?1%")
-	List<Acesso> buscarAcessoDesc(String desc);
+	List<Acesso> buscarAcessoDesc(String descricao);
 	
 	@Query("select a from Acesso a where upper(trim(a.descricao)) like %?1% and a.empresa.id = ?2")
 	List<Acesso> buscarAcessoDescEmpresa(String descricao, Long empresa);

@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.Acesso;
+import adcsistemas.loja_comprebem.model.MarcaProduto;
 import adcsistemas.loja_comprebem.repository.AcessoRepository;
 import adcsistemas.loja_comprebem.service.AcessoService;
 
@@ -36,7 +37,7 @@ public class AcessoController {
 	@PostMapping(value = "/salvarAcesso")
 	public ResponseEntity<Acesso> salvarAcesso(@RequestBody Acesso acesso) throws ExceptionLojaComprebem {
 
-		if (acesso.getId() == null) {
+		if (acesso.getId() != null) {
 			List<Acesso> acessos = acessoRepository.buscarAcessoDesc(acesso.getDescricao().toUpperCase());
 
 			if (!acessos.isEmpty()) {
@@ -54,12 +55,12 @@ public class AcessoController {
 	public ResponseEntity<String> deleteAcesso(@RequestBody Acesso acesso) {
 		
 		if(acessoRepository.findById(acesso.getId()).isPresent() == false) {
-			return new ResponseEntity<String>(new Gson().toJson("Acesso já removido"), HttpStatus.OK);
+			return new ResponseEntity<String>("Acesso já removido", HttpStatus.OK);
 		}
 
 		acessoRepository.deleteById(acesso.getId());
 
-		return new ResponseEntity<>("Acesso excluído com sucesso", HttpStatus.OK);
+		return new ResponseEntity<String>(new Gson().toJson("Acesso excluído com sucesso"), HttpStatus.OK);
 	}
 
 	@ResponseBody
@@ -67,12 +68,12 @@ public class AcessoController {
 	public ResponseEntity<String> deleteAcessoId(@PathVariable("id") Long id) {
 		
 		if(acessoRepository.findById(id).isPresent() == false) {
-			return new ResponseEntity<String>(new Gson().toJson("Acesso já removido"), HttpStatus.OK);
+			return new ResponseEntity<String>("Acesso já removido", HttpStatus.OK);
 		}
 
 		acessoRepository.deleteById(id);
 
-		return new ResponseEntity<>("Acesso excluído com sucesso", HttpStatus.OK);
+		return new ResponseEntity<String>(new Gson().toJson("Acesso excluído com sucesso"), HttpStatus.OK);
 	}
 
 	@ResponseBody
@@ -89,10 +90,10 @@ public class AcessoController {
 	}
 
 	@ResponseBody
-	@GetMapping(value = "/consultaAcessoDesc/{desc}")
-	public ResponseEntity<List<Acesso>> consultaAcessoDesc(@PathVariable("desc") String desc) {
+	@GetMapping(value = "/consultaAcessoDesc/{descricao}")
+	public ResponseEntity<List<Acesso>> consultaAcessoDesc(@PathVariable("desc") String descricao) {
 
-		List<Acesso> acesso = acessoRepository.buscarAcessoDesc(desc.toUpperCase());
+		List<Acesso> acesso = acessoRepository.buscarAcessoDesc(descricao.toUpperCase());
 
 		return new ResponseEntity<List<Acesso>>(acesso, HttpStatus.OK);
 	}
@@ -119,10 +120,10 @@ public class AcessoController {
 
 	@ResponseBody
 	@GetMapping(value = "/pesquisaAcessoDescEmpresa/{descricao}/{empresa}")
-	public ResponseEntity<List<Acesso>> pesquisaAcessoDescEmpresa(@PathVariable("descricao") String nomeDesc,
+	public ResponseEntity<List<Acesso>> pesquisaAcessoDescEmpresa(@PathVariable("descricao") String descricao,
 			@PathVariable("empresa") Long empresa) {
 		
-		List<Acesso> acesso = acessoRepository.buscarAcessoDescEmpresa(nomeDesc.toUpperCase(), empresa);
+		List<Acesso> acesso = acessoRepository.buscarAcessoDescEmpresa(descricao.toUpperCase(), empresa);
 
 		return new ResponseEntity<List<Acesso>>(acesso, HttpStatus.OK);
 	}
