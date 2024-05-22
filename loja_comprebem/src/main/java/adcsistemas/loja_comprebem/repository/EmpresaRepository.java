@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -52,4 +53,15 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long>{
 
 	@Query(value = "select pj from Empresa pj where upper(trim(pj.categoria)) like %?1%")
 	public List<Empresa> existeCategoriaList(String categoria);
+	
+	@Query(value = "select a from Empresa a where a.empresa.id = ?1 ")
+	public List<Empresa>  findPage(Long idEmpresa, Pageable pageable);
+	
+	@Query(nativeQuery = true, value = "select cast (count(1) / 6 + 1 as integer) as qtdpagina from empresa where empresa_id = ?1")
+	public Integer qtdPagina(Long idEmpresa);
+	
+	@Query("select a from Empresa a where upper(trim(a.nomeFantasia)) like %?1% and a.empresa.id = ?2")
+	List<Empresa> buscarEmpresaDescEmpresa(String nomeFantasia, Long empresa);
+	
+	
 }

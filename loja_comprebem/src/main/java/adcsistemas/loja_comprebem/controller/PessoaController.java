@@ -7,6 +7,9 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,8 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
 import adcsistemas.loja_comprebem.enums.TipoPessoa;
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
+import adcsistemas.loja_comprebem.model.Acesso;
 import adcsistemas.loja_comprebem.model.Empresa;
 import adcsistemas.loja_comprebem.model.Endereco;
 import adcsistemas.loja_comprebem.model.PessoaFisica;
@@ -44,6 +50,9 @@ public class PessoaController {
 
 	@Autowired
 	private PessoaFisicaRepository pessoaFisicaRepository;
+	
+	@Autowired
+	private EmpresaRepository empresaRepository;
 
 	@Autowired
 	private PessoaUserService pessoaUserService;
@@ -383,5 +392,57 @@ public class PessoaController {
 		pessoaFisica = pessoaUserService.salvarPessoaFisica(pessoaFisica);
 
 		return new ResponseEntity<PessoaFisica>(pessoaFisica, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/listaPageEmpresa/{idEmpresa}/{pagina}")
+	public ResponseEntity<List<Empresa>> pageEmpresa(@PathVariable("idEmpresa") Long idEmpresa,
+			@PathVariable("pagina") Integer pagina){
+		
+		Pageable pageable = PageRequest.of(pagina, 6, Sort.by("nomeFantasia"));
+		
+		List<Empresa> lista = empresaRepository.findPage(idEmpresa, pageable);
+		
+		return new ResponseEntity<List<Empresa>>(lista, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/qtdPaginaEmpresa/{idEmpresa}")
+	public ResponseEntity<Integer> qtdPagina(@PathVariable("idEmpresa") Long idEmpresa){
+		Integer qtdPagina = empresaRepository.qtdPagina(idEmpresa);
+		
+		return new ResponseEntity<Integer>(qtdPagina, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaEmpresaDesc/{nomeFantasia}/{empresa}")
+	public ResponseEntity<List<Empresa>> consultaEmpresaDesc(@PathVariable("nomeFantasia") String nomeFantasia, 
+			@PathVariable("empresa") Long empresa) {
+
+		List<Empresa> empresas = empresaRepository.buscarEmpresaDescEmpresa(nomeFantasia.toUpperCase(), empresa);
+
+		return new ResponseEntity<List<Empresa>>(empresas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaEmpresaId/{id}")
+	public ResponseEntity<Empresa>consultaEmpresaId(@PathVariable("id") Long id){
+
+		Empresa empresas = empresaRepository.findById(id).get();
+
+		return new ResponseEntity<Empresa>(empresas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@PostMapping(value = "/deleteEmpresa")
+	public ResponseEntity<String> deleteEmpresa(@RequestBody Empresa empresa) {
+		
+		if(empresaRepository.findById(empresa.getId()).isPresent() == false) {
+			return new ResponseEntity<String>("Empresa já removido", HttpStatus.OK);
+		}
+
+		empresaRepository.deleteById(empresa.getId());
+
+		return new ResponseEntity<String>(new Gson().toJson("Empresa excluído com sucesso"), HttpStatus.OK);
 	}
 }

@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 
 import adcsistemas.loja_comprebem.exception.ExceptionLojaComprebem;
 import adcsistemas.loja_comprebem.model.Acesso;
-import adcsistemas.loja_comprebem.model.MarcaProduto;
 import adcsistemas.loja_comprebem.repository.AcessoRepository;
 import adcsistemas.loja_comprebem.service.AcessoService;
 
